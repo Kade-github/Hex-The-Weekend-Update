@@ -83,6 +83,8 @@ class GameOverSubstate extends MusicBeatSubstate
 				PlayState.instance.remove(PlayState.instance.videoSprite);
 				PlayState.instance.removedVideo = true;
 			}
+			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayState.instance.handleInput);
+			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayState.instance.releaseInput);
 			PlayState.instance.switchState(new HexMainMenu(HexMenuState.loadHexMenu("main-menu")));
 			PlayState.loadRep = false;
 			PlayState.stageTesting = false;
