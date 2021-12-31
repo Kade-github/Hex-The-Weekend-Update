@@ -2770,10 +2770,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.screenCenter(X);
 		var pauseBind = FlxKey.fromString(FlxG.save.data.pauseBind);
 		var gppauseBind = FlxKey.fromString(FlxG.save.data.gppauseBind);
-		if ((FlxG.keys.anyJustPressed([pauseBind]) || (KeyBinds.gamepad && FlxG.keys.anyJustPressed([gppauseBind])))
-			&& startedCountdown
-			&& canPause
-			&& !cannotDie)
+		if ((FlxG.keys.anyJustPressed([pauseBind])) && startedCountdown && canPause && !cannotDie)
 		{
 			persistentUpdate = false;
 			persistentDraw = true;
@@ -3336,7 +3333,7 @@ class PlayState extends MusicBeatState
 		{
 			var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
 			var gpresetBind = FlxKey.fromString(FlxG.save.data.gpresetBind);
-			if ((FlxG.keys.anyJustPressed([resetBind]) || KeyBinds.gamepad && FlxG.keys.anyJustPressed([gpresetBind])))
+			if (FlxG.keys.anyJustPressed([resetBind]))
 			{
 				boyfriend.stunned = true;
 				persistentUpdate = false;
@@ -4477,7 +4474,7 @@ class PlayState extends MusicBeatState
 			});
 		}
 
-		if ((KeyBinds.gamepad && !FlxG.keys.justPressed.ANY))
+		if ((false && !FlxG.keys.justPressed.ANY))
 		{
 			// PRESSES, check for note hits
 			if (pressArray.contains(true) && generatedMusic)
