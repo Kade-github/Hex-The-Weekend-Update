@@ -1,0 +1,26 @@
+Heya! Kade here.
+
+I'm going to leave this note for people modding hex. Heres some tips on the cutscene system.
+
+Its like week 6's but it has 3 new commands! (techn 5)
+:bf: = boyfriend speaking
+(ex. :bf:hello world!)
+:hex: = hex speaking
+:gf: = gf speaking
+:myst: = ??? speaking
+
+heres the 3 new ones though
+:BGCHANGE:
+Background change. It allows you to change the current background TO ANYTHING (anything in hex/images/)
+(ex. :BGCHANGE:stageback (leads to assets/hex/images/stageback.png REMEMBER TO NOT INCLUDE THE FILE extension!))
+:PLAYSOUND:
+play a sound lol. (anything in hex/sounds)
+(ex. :PLAYSOUND:bzzt (leads to hex/sounds/bzzt.ogg))
+:BGTRACK:
+changes the background track. this defaults to givin a little bit back.
+(ex. :BGTRACK:givinALittle (leads to hex/music/givinALittle.ogg))
+
+
+I HOPE YOU ENJOY THIS MOD.
+love you
+- kade (basically ninja muffin 2.0)

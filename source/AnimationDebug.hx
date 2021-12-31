@@ -33,6 +33,7 @@ class AnimationDebug extends MusicBeatState
 	var bf:Boyfriend;
 	var dad:Character;
 	var char:Character;
+	var onion:Character;
 	var textAnim:FlxText;
 	var dumbTexts:FlxTypedGroup<FlxText>;
 	var animList:Array<String> = [];
@@ -90,12 +91,25 @@ class AnimationDebug extends MusicBeatState
 		add(front);
 		add(curt);
 
+		onion = new Character(0, 0, daAnim);
+		onion.screenCenter();
+		onion.debugMode = true;
+		add(onion);
+
+		onion.alpha = 0.4;
+
 		dad = new Character(0, 0, daAnim);
 		dad.screenCenter();
 		dad.debugMode = true;
+
+		if (PlayState.Stage.curStage == "hexw" || PlayState.Stage.curStage == "hexwd")
+			dad.setGraphicSize(Std.int(dad.width * 0.75));
+		if (PlayState.Stage.curStage == "hexw" || PlayState.Stage.curStage == "hexwd")
+			onion.setGraphicSize(Std.int(onion.width * 0.75));
 		add(dad);
 
 		char = dad;
+
 		dad.flipX = false;
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
@@ -339,7 +353,7 @@ class AnimationDebug extends MusicBeatState
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.mouse.visible = false;
-			FlxG.switchState(new PlayState());
+			switchState(new PlayState());
 		}
 
 		if (FlxG.keys.justPressed.E)

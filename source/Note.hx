@@ -9,6 +9,7 @@ import flixel.util.FlxColor;
 #if polymod
 import polymod.format.ParseRules.TargetSignatureElement;
 #end
+import LuaClass.LuaNote;
 import PlayState;
 
 using StringTools;
@@ -19,6 +20,8 @@ class Note extends FlxSprite
 	public var baseStrum:Float = 0;
 
 	public var charterSelected:Bool = false;
+
+	public var LuaNote:LuaNote;
 
 	public var rStrumTime:Float = 0;
 
@@ -68,6 +71,8 @@ class Note extends FlxSprite
 	public var spotInLine:Int = 0;
 	public var sustainActive:Bool = true;
 
+	public var stepHeight:Float = 0;
+
 	public var children:Array<Note> = [];
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isAlt:Bool = false, ?bet:Float = 0)
@@ -95,17 +100,8 @@ class Note extends FlxSprite
 		}
 		else
 		{
-			this.strumTime = strumTime;
-			#if FEATURE_STEPMANIA
-			if (PlayState.isSM)
-			{
-				rStrumTime = strumTime;
-			}
-			else
-				rStrumTime = strumTime;
-			#else
+			this.strumTime = strumTime - FlxG.save.data.moffset;
 			rStrumTime = strumTime;
-			#end
 		}
 
 		if (this.strumTime < 0)
@@ -165,7 +161,7 @@ class Note extends FlxSprite
 					setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
 					updateHitbox();
 				default:
-					frames = PlayState.noteskinSprite;
+					frames = Paths.getSparrowAtlas("noteskins/Arrows", "shared");
 
 					for (i in 0...4)
 					{
@@ -224,7 +220,7 @@ class Note extends FlxSprite
 		if (FlxG.save.data.downscroll && sustainNote)
 			flipY = true;
 
-		var stepHeight = (((0.45 * Conductor.stepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
+		stepHeight = (((0.45 * Conductor.stepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
 			2)) / PlayState.songMultiplier;
 
 		if (isSustainNote && prevNote != null)
@@ -276,6 +272,29 @@ class Note extends FlxSprite
 			if (!sustainActive)
 			{
 				alpha = 0.3;
+			}
+		}
+
+		if (PlayState.instance.executeModchart)
+		{
+			var newStepHeight = (((0.45 * Conductor.stepCrochet)) * FlxMath.roundDecimal(PlayState.instance.lScrl[noteData] == 1 ? PlayState.SONG.speed : PlayState.instance.lScrl[noteData],
+				2)) / PlayState.songMultiplier;
+			if (newStepHeight != stepHeight)
+			{
+				stepHeight = newStepHeight;
+				noteYOff = Math.round(-stepHeight + swagWidth * 0.5) + FlxG.save.data.offset + PlayState.songOffset;
+				if (prevNote != null)
+					if (prevNote.isSustainNote)
+					{
+						if (prevNote.scale != null)
+						{
+							prevNote.scale.y *= stepHeight / prevNote.height;
+							prevNote.updateHitbox();
+
+							if (antialiasing)
+								prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight);
+						}
+					}
 			}
 		}
 

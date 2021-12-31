@@ -25,30 +25,14 @@ class StoryMenuState extends MusicBeatState
 
 	static function weekData():Array<Dynamic>
 	{
-		return [
-			['tutorial'],
-			['bopeebo', 'fresh', 'dadbattle'],
-			['spookeez', 'south', "monster"],
-			['pico', 'philly', "blammed"],
-			['satin-panties', "high", "milf"],
-			['cocoa', 'eggnog', 'winter-horrorland'],
-			['senpai', 'roses', 'thorns']
-		];
+		return [['dunk', 'ram', 'hello-world', 'glitcher']];
 	}
 
 	var curDifficulty:Int = 1;
 
 	public static var weekUnlocked:Array<Bool> = [];
 
-	var weekCharacters:Array<Dynamic> = [
-		['', 'bf', 'gf'],
-		['dad', 'bf', 'gf'],
-		['spooky', 'bf', 'gf'],
-		['pico', 'bf', 'gf'],
-		['mom', 'bf', 'gf'],
-		['parents-christmas', 'bf', 'gf'],
-		['senpai', 'bf', 'gf']
-	];
+	var weekCharacters:Array<Dynamic> = [['hex', 'bf', 'gf']];
 
 	var weekNames:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/weekNames'));
 
@@ -167,7 +151,8 @@ class StoryMenuState extends MusicBeatState
 
 		trace("Line 96");
 
-		grpWeekCharacters.add(new MenuCharacter(0, 100, 0.5, false));
+		var leftChar = new MenuCharacter(0, 100, 0.5, false);
+		grpWeekCharacters.add(leftChar);
 		grpWeekCharacters.add(new MenuCharacter(450, 25, 0.9, true));
 		grpWeekCharacters.add(new MenuCharacter(850, 100, 0.5, true));
 
@@ -327,7 +312,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
-			FlxG.switchState(new MainMenuState());
+			switchState(new MainMenuState());
 		}
 
 		if (FlxG.sound.music != null)
@@ -344,6 +329,7 @@ class StoryMenuState extends MusicBeatState
 	{
 		if (weekUnlocked[curWeek])
 		{
+			Debug.logTrace("stuff");
 			if (stopspamming == false)
 			{
 				FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -352,8 +338,10 @@ class StoryMenuState extends MusicBeatState
 				grpWeekCharacters.members[1].animation.play('bfConfirm');
 				stopspamming = true;
 			}
+			Debug.logTrace("stuff");
 
 			PlayState.storyPlaylist = weekData()[curWeek];
+			Debug.logTrace("stuff");
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
 			PlayState.songMultiplier = 1;
@@ -363,17 +351,20 @@ class StoryMenuState extends MusicBeatState
 			PlayState.storyDifficulty = curDifficulty;
 
 			var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
+			Debug.logTrace("stuff");
 			PlayState.sicks = 0;
 			PlayState.bads = 0;
 			PlayState.shits = 0;
 			PlayState.goods = 0;
 			PlayState.campaignMisses = 0;
 			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
+			Debug.logTrace("stuff");
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
+			Debug.logTrace("starting the thing");
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
-				LoadingState.loadAndSwitchState(new PlayState(), true);
+				switchState(new PlayState(), true);
 			});
 		}
 	}

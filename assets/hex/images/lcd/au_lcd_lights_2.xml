@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="au_lcd_lights_2.png">
+	<!-- Created with MY OWN FUCKING HANDS (v2) -->
+	<SubTexture name="Symbol 10000" x="0" y="0" width="1280" height="720" frameX="0" frameY="0" frameWidth="1280" frameHeight="758"/>
+	<SubTexture name="Symbol 10001" x="0" y="0" width="1280" height="720" frameX="0" frameY="1" frameWidth="1280" frameHeight="758"/>
+	<SubTexture name="Symbol 10002" x="0" y="0" width="1280" height="720" frameX="0" frameY="2" frameWidth="1280" frameHeight="758"/>
+	<SubTexture name="Symbol 10003" x="0" y="0" width="1280" height="720" frameX="0" frameY="4" frameWidth="1280" frameHeight="758"/>
+	<SubTexture name="Symbol 10004" x="0" y="0" width="1280" height="720" frameX="0" frameY="5" frameWidth="1280" frameHeight="758"/>
+	<SubTexture name="Symbol 10005" x="0" y="0" width="1280" height="720" frameX="0" frameY="6" frameWidth="1280" frameHeight="758"/>
+	<SubTexture name="Symbol 10006" x="0" y="0" width="1280" height="720" frameX="0" frameY="7" frameWidth="1280" frameHeight="758"/>
+</TextureAtlas>

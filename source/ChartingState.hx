@@ -166,6 +166,8 @@ class ChartingState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 
+		PlayState.inDaPlay = false;
+
 		instance = this;
 
 		deezNuts.set(4, 1);
@@ -195,7 +197,7 @@ class ChartingState extends MusicBeatState
 			}
 			else
 			{
-				var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
+				var diff:String = ["-easy", "", "-hard", "-funky"][PlayState.storyDifficulty];
 				_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
 			}
 		}
@@ -302,8 +304,6 @@ class ChartingState extends MusicBeatState
 		Debug.logTrace("STRUCTS: " + TimingStruct.AllTimings.length);
 
 		recalculateAllSectionTimes();
-
-		poggers();
 
 		Debug.logTrace("Song length in MS: " + FlxG.sound.music.length);
 
@@ -739,7 +739,6 @@ class ChartingState extends MusicBeatState
 				Debug.logTrace(i.bpm + " - START: " + i.startBeat + " - END: " + i.endBeat + " - START-TIME: " + i.startTime);
 
 			recalculateAllSectionTimes();
-			poggers();
 
 			regenerateLines();
 		});
@@ -821,7 +820,6 @@ class ChartingState extends MusicBeatState
 			}
 
 			recalculateAllSectionTimes();
-			poggers();
 
 			regenerateLines();
 		});
@@ -1274,7 +1272,7 @@ class ChartingState extends MusicBeatState
 				_song.notes.remove(i);
 
 			toRemove = []; // clear memory
-			LoadingState.loadAndSwitchState(new PlayState());
+			switchState(new PlayState());
 		});
 
 		tab_group_section.add(refresh);
@@ -1536,7 +1534,7 @@ class ChartingState extends MusicBeatState
 			}
 			else
 			{
-				var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
+				var diff:String = ["-easy", "", "-hard", "-funky"][PlayState.storyDifficulty];
 				_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
 			}
 		}
@@ -1728,6 +1726,8 @@ class ChartingState extends MusicBeatState
 	{
 		var notes = [];
 
+		Debug.logTrace("Basing everything on BPM which will in fact fuck up the sections");
+
 		for (section in _song.notes)
 		{
 			var removed = [];
@@ -1735,17 +1735,17 @@ class ChartingState extends MusicBeatState
 			for (note in section.sectionNotes)
 			{
 				// commit suicide
-				var old = note[0];
-				note[0] = TimingStruct.getTimeFromBeat(note[4]);
-				note[2] = TimingStruct.getTimeFromBeat(TimingStruct.getBeatFromTime(note[2]));
-				if (note[0] < section.startTime)
+				var old = [note[0], note[1], note[2], note[3], note[4]];
+				old[0] = TimingStruct.getTimeFromBeat(old[4]);
+				old[2] = TimingStruct.getTimeFromBeat(TimingStruct.getBeatFromTime(old[0]));
+				if (old[0] < section.startTime && old[0] < section.endTime)
 				{
-					notes.push(note);
+					notes.push(old);
 					removed.push(note);
 				}
-				if (note[0] > section.endTime)
+				if (old[0] > section.endTime && old[0] > section.startTime)
 				{
-					notes.push(note);
+					notes.push(old);
 					removed.push(note);
 				}
 			}
@@ -1762,7 +1762,7 @@ class ChartingState extends MusicBeatState
 
 			for (i in notes)
 			{
-				if (i[0] >= section.startTime && i[0] < section.endTime)
+				if (i[0] >= section.startTime && i[0] <= section.endTime)
 				{
 					saveRemove.push(i);
 					section.sectionNotes.push(i);
@@ -2478,7 +2478,10 @@ class ChartingState extends MusicBeatState
 			{
 				for (note in shownNotes)
 				{
-					if (note.strumTime <= Conductor.songPosition && !claps.contains(note) && FlxG.sound.music.playing)
+					if (note.strumTime <= Conductor.songPosition
+						&& note.strumTime > Conductor.songPosition - 10
+						&& !claps.contains(note)
+						&& FlxG.sound.music.playing)
 					{
 						claps.push(note);
 						FlxG.sound.play(Paths.sound('SNAP'));
@@ -2650,7 +2653,7 @@ class ChartingState extends MusicBeatState
 
 					toRemove = []; // clear memory
 
-					LoadingState.loadAndSwitchState(new PlayState());
+					switchState(new PlayState());
 				}
 
 				if (FlxG.keys.justPressed.E)
@@ -3474,7 +3477,7 @@ class ChartingState extends MusicBeatState
 
 	function loadJson(songId:String):Void
 	{
-		var difficultyArray:Array<String> = ["-easy", "", "-hard"];
+		var difficultyArray:Array<String> = ["-easy", "", "-hard", "-funky"];
 
 		PlayState.SONG = Song.loadFromJson(songId, difficultyArray[PlayState.storyDifficulty]);
 
@@ -3509,7 +3512,7 @@ class ChartingState extends MusicBeatState
 			_song.notes.remove(i);
 
 		toRemove = []; // clear memory
-		LoadingState.loadAndSwitchState(new ChartingState());
+		switchState(new ChartingState());
 	}
 
 	function loadAutosave():Void
@@ -3562,7 +3565,7 @@ class ChartingState extends MusicBeatState
 			_song.notes.remove(i);
 
 		toRemove = []; // clear memory
-		LoadingState.loadAndSwitchState(new ChartingState());
+		switchState(new ChartingState());
 	}
 
 	function autosaveSong():Void
@@ -3579,7 +3582,7 @@ class ChartingState extends MusicBeatState
 
 	private function saveLevel()
 	{
-		var difficultyArray:Array<String> = ["-easy", "", "-hard"];
+		var difficultyArray:Array<String> = ["-easy", "", "-hard", "-funky"];
 
 		var toRemove = [];
 

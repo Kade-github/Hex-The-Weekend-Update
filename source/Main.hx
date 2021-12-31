@@ -1,5 +1,6 @@
 package;
 
+import flixel.graphics.FlxGraphic;
 import openfl.display.Bitmap;
 import lime.app.Application;
 #if FEATURE_DISCORD
@@ -115,6 +116,25 @@ class Main extends Sprite
 	var game:FlxGame;
 
 	var fpsCounter:KadeEngineFPS;
+
+	public static function dumpObject(graphic:FlxGraphic)
+	{
+		@:privateAccess
+		for (key in FlxG.bitmap._cache.keys())
+		{
+			var obj = FlxG.bitmap._cache.get(key);
+			if (obj != null)
+			{
+				if (obj == graphic)
+				{
+					Assets.cache.removeBitmapData(key);
+					FlxG.bitmap._cache.remove(key);
+					obj.destroy();
+					break;
+				}
+			}
+		}
+	}
 
 	// taken from forever engine, cuz optimization very pog.
 	// thank you shubs :)

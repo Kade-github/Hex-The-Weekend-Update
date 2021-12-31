@@ -558,7 +558,6 @@ class ShitMsOption extends Option
 	}
 }
 
-
 class RoundAccuracy extends Option
 {
 	public function new(desc:String)
@@ -614,8 +613,6 @@ class CpuStrums extends Option
 		return "CPU Strums: < " + (FlxG.save.data.cpuStrums ? "Light up" : "Stay static") + " >";
 	}
 }
-
-
 
 class GraphicLoading extends Option
 {
@@ -1148,10 +1145,10 @@ class FPSCapOption extends Option
 
 	override function right():Bool
 	{
-		if (FlxG.save.data.fpsCap >= 290)
+		if (FlxG.save.data.fpsCap >= 200)
 		{
-			FlxG.save.data.fpsCap = 290;
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
+			FlxG.save.data.fpsCap = 200;
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(200);
 		}
 		else
 			FlxG.save.data.fpsCap = FlxG.save.data.fpsCap + 10;
@@ -1162,8 +1159,8 @@ class FPSCapOption extends Option
 
 	override function left():Bool
 	{
-		if (FlxG.save.data.fpsCap > 290)
-			FlxG.save.data.fpsCap = 290;
+		if (FlxG.save.data.fpsCap > 200)
+			FlxG.save.data.fpsCap = 200;
 		else if (FlxG.save.data.fpsCap < 60)
 			FlxG.save.data.fpsCap = Application.current.window.displayMode.refreshRate;
 		else
@@ -1459,6 +1456,46 @@ class OffsetThing extends Option
 	public override function getValue():String
 	{
 		return "Visual offset: < " + HelperFunctions.truncateFloat(FlxG.save.data.offset, 0) + " >";
+	}
+}
+
+class MOffsetThing extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.moffset--;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.moffset++;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Audio offset: < " + HelperFunctions.truncateFloat(FlxG.save.data.moffset, 0) + " >";
+	}
+
+	public override function getValue():String
+	{
+		return "Audio offset: < " + HelperFunctions.truncateFloat(FlxG.save.data.moffset, 0) + " >";
 	}
 }
 
@@ -1771,6 +1808,8 @@ class LockWeeksOption extends Option
 			display = updateDisplay();
 			return true;
 		}
+		FlxG.save.data.weekendxBeat = null;
+		FlxG.save.data.weekxBeat = null;
 		FlxG.save.data.weekUnlocked = 1;
 		StoryMenuState.weekUnlocked = [true, true];
 		confirm = false;
@@ -1861,6 +1900,7 @@ class ResetSettings extends Option
 		FlxG.save.data.dfjk = null;
 		FlxG.save.data.accuracyDisplay = null;
 		FlxG.save.data.offset = null;
+		FlxG.save.data.moffset = null;
 		FlxG.save.data.songPosition = null;
 		FlxG.save.data.fps = null;
 		FlxG.save.data.changedHit = null;

@@ -1,5 +1,6 @@
 package;
 
+import flash.display.BlendMode;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxBasic;
@@ -21,6 +22,9 @@ class Stage extends MusicBeatState
 	// Layering algorithm for noobs: Everything loads by the method of "On Top", example: You load wall first(Every other added BG layers on it), then you load road(comes on top of wall and doesn't clip through it), then loading street lights(comes on top of wall and road)
 	public var swagBacks:Map<String,
 		Dynamic> = []; // Store BGs here to use them later (for example with slowBacks, using your custom stage event or to adjust position in stage debug menu(press 8 while in PlayState with debug build of the game))
+
+	public var appearInFront:Array<FlxSprite> = [];
+
 	public var swagGroup:Map<String, FlxTypedGroup<Dynamic>> = []; // Store Groups
 	public var animatedBacks:Array<FlxSprite> = []; // Store animated backgrounds and make them play animation(Animation must be named Idle!! Else use swagGroup/swagBacks and script it in stepHit/beatHit function of this file!!)
 	public var layInFront:Array<Array<FlxSprite>> = [[], [], []]; // BG layering, format: first [0] - in front of GF, second [1] - in front of opponent, third [2] - in front of boyfriend(and technically also opponent since Haxe layering moment)
@@ -32,18 +36,10 @@ class Stage extends MusicBeatState
 	// All of the above must be set or used in your stage case code block!!
 	public var positions:Map<String, Map<String, Array<Int>>> = [
 		// Assign your characters positions on stage here!
-		'halloween' => ['spooky' => [100, 300], 'monster' => [100, 200]],
-		'philly' => ['pico' => [100, 400]],
-		'limo' => ['bf-car' => [1030, 230]],
-		'mall' => ['bf-christmas' => [970, 450], 'parents-christmas' => [-400, 100]],
-		'mallEvil' => ['bf-christmas' => [1090, 450], 'monster-christmas' => [100, 150]],
-		'school' => [
-			'gf-pixel' => [580, 430],
-			'bf-pixel' => [970, 670],
-			'senpai' => [250, 460],
-			'senpai-angry' => [250, 460]
-		],
-		'schoolEvil' => ['gf-pixel' => [580, 430], 'bf-pixel' => [970, 670], 'spirit' => [-50, 200]]
+		'hexw' => ['gf-w' => [248, -33], 'bf-w' => [753, 258], 'hex-w' => [69, -58]],
+		'hexwd' => ['gf-wd' => [248, -33], 'bf-wd' => [753, 238], 'hex-g-bruh' => [125, -75]],
+		'hexwdg' => ['gf-wd' => [248, -33], 'bf-wd' => [753, 238], 'hex-g-bruh' => [125, -75]],
+		'hexwstage' => ['lcdGF1' => [248, -33], 'lcdBF1' => [753, 258], 'lcdHEX1' => [69, -58]],
 	];
 
 	public function new(daStage:String)
@@ -56,360 +52,390 @@ class Stage extends MusicBeatState
 
 		switch (daStage)
 		{
-			case 'halloween':
+			case 'hex':
 				{
-					var hallowTex = Paths.getSparrowAtlas('halloween_bg', 'week2');
-
-					var halloweenBG = new FlxSprite(-200, -80);
-					halloweenBG.frames = hallowTex;
-					halloweenBG.animation.addByPrefix('idle', 'halloweem bg0');
-					halloweenBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', 24, false);
-					halloweenBG.animation.play('idle');
-					halloweenBG.antialiasing = FlxG.save.data.antialiasing;
-					swagBacks['halloweenBG'] = halloweenBG;
-					toAdd.push(halloweenBG);
-				}
-			case 'philly':
-				{
-					var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.loadImage('philly/sky', 'week3'));
-					bg.scrollFactor.set(0.1, 0.1);
-					swagBacks['bg'] = bg;
+					camZoom = 0.9;
+					curStage = 'hex';
+					var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback', 'hex'));
+					bg.antialiasing = true;
+					bg.scrollFactor.set(0.9, 0.9);
+					bg.active = false;
 					toAdd.push(bg);
 
-					var city:FlxSprite = new FlxSprite(-10).loadGraphic(Paths.loadImage('philly/city', 'week3'));
-					city.scrollFactor.set(0.3, 0.3);
-					city.setGraphicSize(Std.int(city.width * 0.85));
-					city.updateHitbox();
-					swagBacks['city'] = city;
-					toAdd.push(city);
-
-					var phillyCityLights = new FlxTypedGroup<FlxSprite>();
-					if (FlxG.save.data.distractions)
-					{
-						swagGroup['phillyCityLights'] = phillyCityLights;
-						toAdd.push(phillyCityLights);
-					}
-
-					for (i in 0...5)
-					{
-						var light:FlxSprite = new FlxSprite(city.x).loadGraphic(Paths.loadImage('philly/win' + i, 'week3'));
-						light.scrollFactor.set(0.3, 0.3);
-						light.visible = false;
-						light.setGraphicSize(Std.int(light.width * 0.85));
-						light.updateHitbox();
-						light.antialiasing = FlxG.save.data.antialiasing;
-						phillyCityLights.add(light);
-					}
-
-					var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.loadImage('philly/behindTrain', 'week3'));
-					swagBacks['streetBehind'] = streetBehind;
-					toAdd.push(streetBehind);
-
-					var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.loadImage('philly/train', 'week3'));
-					if (FlxG.save.data.distractions)
-					{
-						swagBacks['phillyTrain'] = phillyTrain;
-						toAdd.push(phillyTrain);
-					}
-
-					trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes', 'shared'));
-					FlxG.sound.list.add(trainSound);
-
-					// var cityLights:FlxSprite = new FlxSprite().loadGraphic(AssetPaths.win0.png);
-
-					var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.loadImage('philly/street', 'week3'));
-					swagBacks['street'] = street;
-					toAdd.push(street);
+					var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront', 'hex'));
+					stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+					stageFront.updateHitbox();
+					stageFront.antialiasing = true;
+					stageFront.scrollFactor.set(0.9, 0.9);
+					stageFront.active = false;
+					toAdd.push(stageFront);
 				}
-			case 'limo':
+			case 'hexss':
 				{
-					camZoom = 0.90;
+					camZoom = 0.9;
+					curStage = 'hexss';
+					var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('sunset/stageback', 'hex'));
+					bg.antialiasing = true;
+					bg.scrollFactor.set(0.9, 0.9);
+					bg.active = false;
+					toAdd.push(bg);
 
-					var skyBG:FlxSprite = new FlxSprite(-120, -50).loadGraphic(Paths.loadImage('limo/limoSunset', 'week4'));
-					skyBG.scrollFactor.set(0.1, 0.1);
-					skyBG.antialiasing = FlxG.save.data.antialiasing;
-					swagBacks['skyBG'] = skyBG;
-					toAdd.push(skyBG);
+					var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('sunset/stagefront', 'hex'));
+					stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+					stageFront.updateHitbox();
+					stageFront.antialiasing = true;
+					stageFront.scrollFactor.set(0.9, 0.9);
+					stageFront.active = false;
+					toAdd.push(stageFront);
+				}
+			case 'hexn':
+				{
+					camZoom = 0.9;
+					curStage = 'hexn';
+					var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('night/stageback', 'hex'));
+					bg.antialiasing = true;
+					bg.scrollFactor.set(0.9, 0.9);
+					bg.active = false;
+					toAdd.push(bg);
 
-					var bgLimo:FlxSprite = new FlxSprite(-200, 480);
-					bgLimo.frames = Paths.getSparrowAtlas('limo/bgLimo', 'week4');
-					bgLimo.animation.addByPrefix('drive', "background limo pink", 24);
-					bgLimo.animation.play('drive');
-					bgLimo.scrollFactor.set(0.4, 0.4);
-					bgLimo.antialiasing = FlxG.save.data.antialiasing;
-					swagBacks['bgLimo'] = bgLimo;
-					toAdd.push(bgLimo);
+					var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('night/stagefront', 'hex'));
+					stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+					stageFront.updateHitbox();
+					stageFront.antialiasing = true;
+					stageFront.scrollFactor.set(0.9, 0.9);
+					stageFront.active = false;
+					toAdd.push(stageFront);
+				}
+			case 'hexg':
+				{
+					camZoom = 0.9;
+					curStage = 'hexg';
+					swagBacks['unGlitchedBG'] = new FlxSprite(-600, -200).loadGraphic(Paths.image('glitcher/stageback', 'hex'));
+					swagBacks['unGlitchedBG'].antialiasing = true;
+					swagBacks['unGlitchedBG'].scrollFactor.set(0.9, 0.9);
+					swagBacks['unGlitchedBG'].active = false;
+					toAdd.push(swagBacks['unGlitchedBG']);
 
-					var fastCar:FlxSprite;
-					fastCar = new FlxSprite(-300, 160).loadGraphic(Paths.loadImage('limo/fastCarLol', 'week4'));
-					fastCar.antialiasing = FlxG.save.data.antialiasing;
-					fastCar.visible = false;
+					swagBacks['unGlitchedStageFront'] = new FlxSprite(-650, 600).loadGraphic(Paths.image('glitcher/stagefront', 'hex'));
+					swagBacks['unGlitchedStageFront'].setGraphicSize(Std.int(swagBacks['unGlitchedStageFront'].width * 1.1));
+					swagBacks['unGlitchedStageFront'].updateHitbox();
+					swagBacks['unGlitchedStageFront'].antialiasing = true;
+					swagBacks['unGlitchedStageFront'].scrollFactor.set(0.9, 0.9);
+					swagBacks['unGlitchedStageFront'].active = false;
+					toAdd.push(swagBacks['unGlitchedStageFront']);
 
-					if (FlxG.save.data.distractions)
+					PlayState.glitcherDad = new Character(100, 100, 'hex-wire');
+					PlayState.glitcherBF = new Boyfriend(770, 450, 'bf-wire');
+					swagBacks['glitcherStage'] = new FlxSprite(-600, -200).loadGraphic(Paths.image('WIRE/WIREStageBack', 'hex'));
+					swagBacks['glitcherStage'].antialiasing = true;
+					swagBacks['glitcherStage'].scrollFactor.set(0.9, 0.9);
+					swagBacks['glitcherStage'].active = false;
+
+					PlayState.glitcherDad.alpha = 0;
+					PlayState.glitcherBF.alpha = 0;
+					swagBacks['glitcherStage'].alpha = 0;
+
+					toAdd.push(swagBacks['glitcherStage']);
+				}
+			case 'hexw':
+				{
+					camZoom = 0.9;
+					curStage = 'hexw';
+					if (PlayState.SONG.songId.toLowerCase() == "cooling")
+						swagBacks['hexBack'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/hexBack', 'hex'));
+					else
+						swagBacks['hexBack'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/hexBack_noVis', 'hex'));
+					swagBacks['hexBack'].antialiasing = true;
+					swagBacks['hexBack'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexBack'].setGraphicSize(Std.int(swagBacks['hexBack'].width * 1.5));
+
+					swagBacks['hexFront'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/hexFront', 'hex'));
+					swagBacks['hexFront'].antialiasing = true;
+					swagBacks['hexFront'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexFront'].setGraphicSize(Std.int(swagBacks['hexFront'].width * 1.5));
+
+					swagBacks['topOverlay'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/topOverlay', 'hex'));
+					swagBacks['topOverlay'].antialiasing = true;
+					swagBacks['topOverlay'].scrollFactor.set(0.9, 0.9);
+					swagBacks['topOverlay'].setGraphicSize(Std.int(swagBacks['topOverlay'].width * 1.5));
+
+					var sprite:FlxSprite = new FlxSprite(42, -14);
+					sprite.frames = Paths.getSparrowAtlas('weekend/crowd', "hex");
+					if (PlayState.SONG.songId == "java")
+						sprite.frames = Paths.getSparrowAtlas('weekend/javaCrowd', "hex");
+					sprite.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					sprite.antialiasing = true;
+					sprite.scrollFactor.set(0.9, 0.9);
+					sprite.setGraphicSize(Std.int(sprite.width * 1.5));
+
+					swagBacks['crowd'] = sprite;
+
+					toAdd.push(swagBacks['hexBack']);
+					toAdd.push(swagBacks['hexFront']);
+
+					// spotlights
+
+					for (i in 0...4)
 					{
-						var grpLimoDancers = new FlxTypedGroup<BackgroundDancer>();
-						swagGroup['grpLimoDancers'] = grpLimoDancers;
-						toAdd.push(grpLimoDancers);
+						var spotLight = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/spot' + (i + 1), 'hex'));
+						spotLight.antialiasing = true;
+						spotLight.scrollFactor.set(0.9, 0.9);
+						spotLight.setGraphicSize(Std.int(spotLight.width * 1.5));
+						spotLight.alpha = 0;
 
-						for (i in 0...5)
+						spotLight.blend = BlendMode.ADD;
+
+						swagBacks['spot' + i] = spotLight;
+						layInFront[0].push(swagBacks['spot' + i]);
+					}
+					if (PlayState.SONG.songId.toLowerCase() == "cooling")
+					{
+						PlayState.coolingDad = new Character(69, -58, 'hex-wc');
+						PlayState.coolingBF = new Boyfriend(753, 258, 'bf-wc');
+						PlayState.coolingGF = new Boyfriend(248, -33, 'gf-wc');
+
+						PlayState.coolingDad.alpha = 0;
+						PlayState.coolingBF.alpha = 0;
+						PlayState.coolingGF.alpha = 0;
+
+						swagBacks['hexDarkBack'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/breakBack', 'hex'));
+						swagBacks['hexDarkBack'].antialiasing = true;
+						swagBacks['hexDarkBack'].scrollFactor.set(0.9, 0.9);
+						swagBacks['hexDarkBack'].setGraphicSize(Std.int(swagBacks['hexDarkBack'].width * 1.5));
+
+						swagBacks['hexDarkFront'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/breakFront', 'hex'));
+						swagBacks['hexDarkFront'].antialiasing = true;
+						swagBacks['hexDarkFront'].scrollFactor.set(0.9, 0.9);
+						swagBacks['hexDarkFront'].setGraphicSize(Std.int(swagBacks['hexDarkFront'].width * 1.5));
+
+						swagBacks['topDarkOverlay'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/breakOverlay', 'hex'));
+						swagBacks['topDarkOverlay'].antialiasing = true;
+						swagBacks['topDarkOverlay'].scrollFactor.set(0.9, 0.9);
+						swagBacks['topDarkOverlay'].setGraphicSize(Std.int(swagBacks['topDarkOverlay'].width * 1.5));
+
+						var dsprite:FlxSprite = new FlxSprite(42, -14);
+						dsprite.frames = Paths.getSparrowAtlas('weekend/crowd_dark', "hex");
+						dsprite.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+						dsprite.antialiasing = true;
+						dsprite.scrollFactor.set(0.9, 0.9);
+						dsprite.setGraphicSize(Std.int(dsprite.width * 1.5));
+
+						swagBacks['darkCrowd'] = dsprite;
+
+						swagBacks['hexDarkBack'].alpha = 0;
+						swagBacks['hexDarkFront'].alpha = 0;
+						swagBacks['topDarkOverlay'].alpha = 0;
+						swagBacks['darkCrowd'].alpha = 0;
+
+						toAdd.push(swagBacks['hexDarkBack']);
+						toAdd.push(swagBacks['hexDarkFront']);
+
+						for (i in 0...2)
 						{
-							var dancer:BackgroundDancer = new BackgroundDancer((370 * i) + 130, bgLimo.y - 400);
-							dancer.scrollFactor.set(0.4, 0.4);
-							grpLimoDancers.add(dancer);
-							swagBacks['dancer' + i] = dancer;
+							var spotLight = new FlxSprite(0, 0).loadGraphic(Paths.image('weekend/breakSpotlight', 'hex'));
+							spotLight.antialiasing = true;
+							spotLight.scrollFactor.set(0.9, 0.9);
+							spotLight.setGraphicSize(Std.int(spotLight.width * 1.5));
+							spotLight.alpha = 0;
+
+							spotLight.blend = BlendMode.ADD;
+
+							swagBacks['breakSpot' + i] = spotLight;
+							layInFront[0].push(swagBacks['breakSpot' + i]);
 						}
-
-						swagBacks['fastCar'] = fastCar;
-						layInFront[2].push(fastCar);
-						resetFastCar();
-					}
-
-					var overlayShit:FlxSprite = new FlxSprite(-500, -600).loadGraphic(Paths.loadImage('limo/limoOverlay', 'week4'));
-					overlayShit.alpha = 0.5;
-					// add(overlayShit);
-
-					// var shaderBullshit = new BlendModeEffect(new OverlayShader(), FlxColor.RED);
-
-					// FlxG.camera.setFilters([new ShaderFilter(cast shaderBullshit.shader)]);
-
-					// overlayShit.shader = shaderBullshit;
-
-					var limoTex = Paths.getSparrowAtlas('limo/limoDrive', 'week4');
-
-					var limo = new FlxSprite(-120, 550);
-					limo.frames = limoTex;
-					limo.animation.addByPrefix('drive', "Limo stage", 24);
-					limo.animation.play('drive');
-					limo.antialiasing = FlxG.save.data.antialiasing;
-					layInFront[0].push(limo);
-					swagBacks['limo'] = limo;
-				}
-			case 'mall':
-				{
-					camZoom = 0.80;
-
-					var bg:FlxSprite = new FlxSprite(-1000, -500).loadGraphic(Paths.loadImage('christmas/bgWalls', 'week5'));
-					bg.antialiasing = FlxG.save.data.antialiasing;
-					bg.scrollFactor.set(0.2, 0.2);
-					bg.active = false;
-					bg.setGraphicSize(Std.int(bg.width * 0.8));
-					bg.updateHitbox();
-					swagBacks['bg'] = bg;
-					toAdd.push(bg);
-
-					var upperBoppers = new FlxSprite(-240, -90);
-					upperBoppers.frames = Paths.getSparrowAtlas('christmas/upperBop', 'week5');
-					upperBoppers.animation.addByPrefix('idle', "Upper Crowd Bob", 24, false);
-					upperBoppers.antialiasing = FlxG.save.data.antialiasing;
-					upperBoppers.scrollFactor.set(0.33, 0.33);
-					upperBoppers.setGraphicSize(Std.int(upperBoppers.width * 0.85));
-					upperBoppers.updateHitbox();
-					if (FlxG.save.data.distractions)
-					{
-						swagBacks['upperBoppers'] = upperBoppers;
-						toAdd.push(upperBoppers);
-						animatedBacks.push(upperBoppers);
-					}
-
-					var bgEscalator:FlxSprite = new FlxSprite(-1100, -600).loadGraphic(Paths.loadImage('christmas/bgEscalator', 'week5'));
-					bgEscalator.antialiasing = FlxG.save.data.antialiasing;
-					bgEscalator.scrollFactor.set(0.3, 0.3);
-					bgEscalator.active = false;
-					bgEscalator.setGraphicSize(Std.int(bgEscalator.width * 0.9));
-					bgEscalator.updateHitbox();
-					swagBacks['bgEscalator'] = bgEscalator;
-					toAdd.push(bgEscalator);
-
-					var tree:FlxSprite = new FlxSprite(370, -250).loadGraphic(Paths.loadImage('christmas/christmasTree', 'week5'));
-					tree.antialiasing = FlxG.save.data.antialiasing;
-					tree.scrollFactor.set(0.40, 0.40);
-					swagBacks['tree'] = tree;
-					toAdd.push(tree);
-
-					var bottomBoppers = new FlxSprite(-300, 140);
-					bottomBoppers.frames = Paths.getSparrowAtlas('christmas/bottomBop', 'week5');
-					bottomBoppers.animation.addByPrefix('idle', 'Bottom Level Boppers', 24, false);
-					bottomBoppers.antialiasing = FlxG.save.data.antialiasing;
-					bottomBoppers.scrollFactor.set(0.9, 0.9);
-					bottomBoppers.setGraphicSize(Std.int(bottomBoppers.width * 1));
-					bottomBoppers.updateHitbox();
-					if (FlxG.save.data.distractions)
-					{
-						swagBacks['bottomBoppers'] = bottomBoppers;
-						toAdd.push(bottomBoppers);
-						animatedBacks.push(bottomBoppers);
-					}
-
-					var fgSnow:FlxSprite = new FlxSprite(-600, 700).loadGraphic(Paths.loadImage('christmas/fgSnow', 'week5'));
-					fgSnow.active = false;
-					fgSnow.antialiasing = FlxG.save.data.antialiasing;
-					swagBacks['fgSnow'] = fgSnow;
-					toAdd.push(fgSnow);
-
-					var santa = new FlxSprite(-840, 150);
-					santa.frames = Paths.getSparrowAtlas('christmas/santa', 'week5');
-					santa.animation.addByPrefix('idle', 'santa idle in fear', 24, false);
-					santa.antialiasing = FlxG.save.data.antialiasing;
-					if (FlxG.save.data.distractions)
-					{
-						swagBacks['santa'] = santa;
-						toAdd.push(santa);
-						animatedBacks.push(santa);
 					}
 				}
-			case 'mallEvil':
+			case 'hexwd':
 				{
-					var bg:FlxSprite = new FlxSprite(-400, -500).loadGraphic(Paths.loadImage('christmas/evilBG', 'week5'));
-					bg.antialiasing = FlxG.save.data.antialiasing;
-					bg.scrollFactor.set(0.2, 0.2);
-					bg.active = false;
-					bg.setGraphicSize(Std.int(bg.width * 0.8));
-					bg.updateHitbox();
-					swagBacks['bg'] = bg;
-					toAdd.push(bg);
+					camZoom = 0.9;
+					curStage = 'hexwd';
+					swagBacks['hexBack'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/detected/hexBack', 'hex'));
+					swagBacks['hexBack'].antialiasing = true;
+					swagBacks['hexBack'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexBack'].setGraphicSize(Std.int(swagBacks['hexBack'].width * 1.5));
 
-					var evilTree:FlxSprite = new FlxSprite(300, -300).loadGraphic(Paths.loadImage('christmas/evilTree', 'week5'));
-					evilTree.antialiasing = FlxG.save.data.antialiasing;
-					evilTree.scrollFactor.set(0.2, 0.2);
-					swagBacks['evilTree'] = evilTree;
-					toAdd.push(evilTree);
+					swagBacks['hexFront'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/detected/hexFront', 'hex'));
+					swagBacks['hexFront'].antialiasing = true;
+					swagBacks['hexFront'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexFront'].setGraphicSize(Std.int(swagBacks['hexFront'].width * 1.5));
 
-					var evilSnow:FlxSprite = new FlxSprite(-200, 700).loadGraphic(Paths.loadImage("christmas/evilSnow", 'week5'));
-					evilSnow.antialiasing = FlxG.save.data.antialiasing;
-					swagBacks['evilSnow'] = evilSnow;
-					toAdd.push(evilSnow);
+					swagBacks['topOverlay'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/detected/topOverlay', 'hex'));
+					swagBacks['topOverlay'].antialiasing = true;
+					swagBacks['topOverlay'].scrollFactor.set(0.9, 0.9);
+					swagBacks['topOverlay'].setGraphicSize(Std.int(swagBacks['topOverlay'].width * 1.5));
+
+					var sprite:FlxSprite = new FlxSprite(42, -14);
+					sprite.frames = Paths.getSparrowAtlas('weekend/detected/crowd', "hex");
+					sprite.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					sprite.antialiasing = true;
+					sprite.scrollFactor.set(0.9, 0.9);
+					sprite.setGraphicSize(Std.int(sprite.width * 1.5));
+
+					swagBacks['crowd'] = sprite;
+
+					toAdd.push(swagBacks['hexBack']);
+					toAdd.push(swagBacks['hexFront']);
 				}
-			case 'school':
+			case "hexwdg":
 				{
-					// defaultCamZoom = 0.9;
+					PlayState.glitcherRDad = new Character(125, -75, 'rmxHex');
+					PlayState.glitcherRBF = new Boyfriend(753, 238, 'rmxBF');
 
-					var bgSky = new FlxSprite().loadGraphic(Paths.loadImage('weeb/weebSky', 'week6'));
-					bgSky.scrollFactor.set(0.1, 0.1);
-					swagBacks['bgSky'] = bgSky;
-					toAdd.push(bgSky);
+					camZoom = 0.9;
+					curStage = 'hexwdg';
+					swagBacks['hexBack'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/detected/hexBack', 'hex'));
+					swagBacks['hexBack'].antialiasing = true;
+					swagBacks['hexBack'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexBack'].setGraphicSize(Std.int(swagBacks['hexBack'].width * 1.5));
 
-					var repositionShit = -200;
+					swagBacks['hexFront'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/detected/hexFront', 'hex'));
+					swagBacks['hexFront'].antialiasing = true;
+					swagBacks['hexFront'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexFront'].setGraphicSize(Std.int(swagBacks['hexFront'].width * 1.5));
 
-					var bgSchool:FlxSprite = new FlxSprite(repositionShit, 0).loadGraphic(Paths.loadImage('weeb/weebSchool', 'week6'));
-					bgSchool.scrollFactor.set(0.6, 0.90);
-					swagBacks['bgSchool'] = bgSchool;
-					toAdd.push(bgSchool);
+					swagBacks['topOverlay'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('weekend/detected/topOverlay', 'hex'));
+					swagBacks['topOverlay'].antialiasing = true;
+					swagBacks['topOverlay'].scrollFactor.set(0.9, 0.9);
+					swagBacks['topOverlay'].setGraphicSize(Std.int(swagBacks['topOverlay'].width * 1.5));
 
-					var bgStreet:FlxSprite = new FlxSprite(repositionShit).loadGraphic(Paths.loadImage('weeb/weebStreet', 'week6'));
-					bgStreet.scrollFactor.set(0.95, 0.95);
-					swagBacks['bgStreet'] = bgStreet;
-					toAdd.push(bgStreet);
+					var sprite:FlxSprite = new FlxSprite(42, -14);
+					sprite.frames = Paths.getSparrowAtlas('glitcher/remix/remixCrowd', "hex");
+					sprite.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					sprite.antialiasing = true;
+					sprite.scrollFactor.set(0.9, 0.9);
+					sprite.setGraphicSize(Std.int(sprite.width * 1.5));
 
-					var fgTrees:FlxSprite = new FlxSprite(repositionShit + 170, 130).loadGraphic(Paths.loadImage('weeb/weebTreesBack', 'week6'));
-					fgTrees.scrollFactor.set(0.9, 0.9);
-					swagBacks['fgTrees'] = fgTrees;
-					toAdd.push(fgTrees);
+					swagBacks['crowd'] = sprite;
 
-					var bgTrees:FlxSprite = new FlxSprite(repositionShit - 380, -800);
-					var treetex = Paths.getPackerAtlas('weeb/weebTrees', 'week6');
-					bgTrees.frames = treetex;
-					bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 12);
-					bgTrees.animation.play('treeLoop');
-					bgTrees.scrollFactor.set(0.85, 0.85);
-					swagBacks['bgTrees'] = bgTrees;
-					toAdd.push(bgTrees);
+					toAdd.push(swagBacks['hexBack']);
+					toAdd.push(swagBacks['hexFront']);
 
-					var treeLeaves:FlxSprite = new FlxSprite(repositionShit, -40);
-					treeLeaves.frames = Paths.getSparrowAtlas('weeb/petals', 'week6');
-					treeLeaves.animation.addByPrefix('leaves', 'PETALS ALL', 24, true);
-					treeLeaves.animation.play('leaves');
-					treeLeaves.scrollFactor.set(0.85, 0.85);
-					swagBacks['treeLeaves'] = treeLeaves;
-					toAdd.push(treeLeaves);
+					swagBacks['hexrBack'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('glitcher/remix/au_wire_back', 'hex'));
+					swagBacks['hexrBack'].antialiasing = true;
+					swagBacks['hexrBack'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexrBack'].setGraphicSize(Std.int(swagBacks['hexrBack'].width * 1.5));
 
-					var widShit = Std.int(bgSky.width * 6);
-
-					bgSky.setGraphicSize(widShit);
-					bgSchool.setGraphicSize(widShit);
-					bgStreet.setGraphicSize(widShit);
-					bgTrees.setGraphicSize(Std.int(widShit * 1.4));
-					fgTrees.setGraphicSize(Std.int(widShit * 0.8));
-					treeLeaves.setGraphicSize(widShit);
-
-					fgTrees.updateHitbox();
-					bgSky.updateHitbox();
-					bgSchool.updateHitbox();
-					bgStreet.updateHitbox();
-					bgTrees.updateHitbox();
-					treeLeaves.updateHitbox();
-
-					var bgGirls = new BackgroundGirls(-100, 190);
-					bgGirls.scrollFactor.set(0.9, 0.9);
-
-					// if (PlayState.SONG.songId.toLowerCase() == 'roses')
-					if (GameplayCustomizeState.freeplaySong == 'roses')
-					{
-						if (FlxG.save.data.distractions)
-							bgGirls.getScared();
-					}
-
-					bgGirls.setGraphicSize(Std.int(bgGirls.width * CoolUtil.daPixelZoom));
-					bgGirls.updateHitbox();
-					if (FlxG.save.data.distractions)
-					{
-						swagBacks['bgGirls'] = bgGirls;
-						toAdd.push(bgGirls);
-					}
+					swagBacks['hexrFront'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('glitcher/remix/au_wire_front', 'hex'));
+					swagBacks['hexrFront'].antialiasing = true;
+					swagBacks['hexrFront'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexrFront'].setGraphicSize(Std.int(swagBacks['hexrFront'].width * 1.5));
+					swagBacks['hexrFront'].alpha = 0;
+					swagBacks['hexrBack'].alpha = 0;
+					toAdd.push(swagBacks['hexrBack']);
+					toAdd.push(swagBacks['hexrFront']);
 				}
-			case 'schoolEvil':
+			case 'hexwstage':
 				{
-					var waveEffectBG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 3, 2);
-					var waveEffectFG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 5, 2);
+					camZoom = 0.9;
+					curStage = 'hexwstage';
 
-					var posX = 400;
-					var posY = 200;
+					// man this is stupid (don't cancel me again please)
 
-					var bg:FlxSprite = new FlxSprite(posX, posY);
-					bg.frames = Paths.getSparrowAtlas('weeb/animatedEvilSchool', 'week6');
-					bg.animation.addByPrefix('idle', 'background 2', 24);
-					bg.animation.play('idle');
-					bg.scrollFactor.set(0.8, 0.9);
-					bg.scale.set(6, 6);
-					swagBacks['bg'] = bg;
-					toAdd.push(bg);
+					PlayState.lcdDad2 = new Character(69, -58, 'lcdHEX2');
+					PlayState.lcdBF2 = new Boyfriend(753, 258, 'lcdBF2');
+					PlayState.lcdGF2 = new Boyfriend(248, -33, 'lcdGF2');
+					PlayState.lcdDad3 = new Character(69, -58, 'lcdHEX3');
+					PlayState.lcdBF3 = new Boyfriend(753, 258, 'lcdBF3');
+					PlayState.lcdGF3 = new Boyfriend(248, -33, 'lcdGF3');
 
-					/* 
-						var bg:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.loadImage('weeb/evilSchoolBG'));
-						bg.scale.set(6, 6);
-						// bg.setGraphicSize(Std.int(bg.width * 6));
-						// bg.updateHitbox();
-						add(bg);
-						var fg:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.loadImage('weeb/evilSchoolFG'));
-						fg.scale.set(6, 6);
-						// fg.setGraphicSize(Std.int(fg.width * 6));
-						// fg.updateHitbox();
-						add(fg);
-						wiggleShit.effectType = WiggleEffectType.DREAMY;
-						wiggleShit.waveAmplitude = 0.01;
-						wiggleShit.waveFrequency = 60;
-						wiggleShit.waveSpeed = 0.8;
-					 */
+					PlayState.lcdDad2.alpha = 0;
+					PlayState.lcdBF2.alpha = 0;
+					PlayState.lcdGF2.alpha = 0;
 
-					// bg.shader = wiggleShit.shader;
-					// fg.shader = wiggleShit.shader;
+					PlayState.lcdDad3.alpha = 0;
+					PlayState.lcdBF3.alpha = 0;
+					PlayState.lcdGF3.alpha = 0;
 
-					/* 
-						var waveSprite = new FlxEffectSprite(bg, [waveEffectBG]);
-						var waveSpriteFG = new FlxEffectSprite(fg, [waveEffectFG]);
-						// Using scale since setGraphicSize() doesnt work???
-						waveSprite.scale.set(6, 6);
-						waveSpriteFG.scale.set(6, 6);
-						waveSprite.setPosition(posX, posY);
-						waveSpriteFG.setPosition(posX, posY);
-						waveSprite.scrollFactor.set(0.7, 0.8);
-						waveSpriteFG.scrollFactor.set(0.9, 0.8);
-						// waveSprite.setGraphicSize(Std.int(waveSprite.width * 6));
-						// waveSprite.updateHitbox();
-						// waveSpriteFG.setGraphicSize(Std.int(fg.width * 6));
-						// waveSpriteFG.updateHitbox();
-						add(waveSprite);
-						add(waveSpriteFG);
-					 */
+					swagBacks['hexBack1'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('lcd/au_lcd_back_1', 'hex'));
+					swagBacks['hexBack1'].antialiasing = true;
+					swagBacks['hexBack1'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexBack1'].setGraphicSize(Std.int(swagBacks['hexBack1'].width * 1.5));
+
+					swagBacks['hexBack2'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('lcd/au_lcd_back_2', 'hex'));
+					swagBacks['hexBack2'].antialiasing = true;
+					swagBacks['hexBack2'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexBack2'].setGraphicSize(Std.int(swagBacks['hexBack2'].width * 1.5));
+
+					swagBacks['hexBack3'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('lcd/au_lcd_back_3', 'hex'));
+					swagBacks['hexBack3'].antialiasing = true;
+					swagBacks['hexBack3'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexBack3'].setGraphicSize(Std.int(swagBacks['hexBack3'].width * 1.5));
+
+					swagBacks['hexFront1'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('lcd/au_lcd_front_1', 'hex'));
+					swagBacks['hexFront1'].antialiasing = true;
+					swagBacks['hexFront1'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexFront1'].setGraphicSize(Std.int(swagBacks['hexFront1'].width * 1.5));
+
+					swagBacks['hexFront2'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('lcd/au_lcd_front_2', 'hex'));
+					swagBacks['hexFront2'].antialiasing = true;
+					swagBacks['hexFront2'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexFront2'].setGraphicSize(Std.int(swagBacks['hexFront2'].width * 1.5));
+
+					swagBacks['hexFront3'] = new FlxSprite(-24, 24).loadGraphic(Paths.image('lcd/au_lcd_front_3', 'hex'));
+					swagBacks['hexFront3'].antialiasing = true;
+					swagBacks['hexFront3'].scrollFactor.set(0.9, 0.9);
+					swagBacks['hexFront3'].setGraphicSize(Std.int(swagBacks['hexFront3'].width * 1.5));
+
+					var light1:FlxSprite = new FlxSprite(42, 44);
+					light1.frames = Paths.getSparrowAtlas('lcd/au_lcd_lights_1', "hex");
+					light1.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					light1.antialiasing = true;
+					light1.scrollFactor.set(0.9, 0.9);
+					light1.setGraphicSize(Std.int(light1.width * 1.5));
+
+					swagBacks['lights1'] = light1;
+
+					var light2:FlxSprite = new FlxSprite(42, 44);
+					light2.frames = Paths.getSparrowAtlas('lcd/au_lcd_lights_2', "hex");
+					light2.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					light2.antialiasing = true;
+					light2.scrollFactor.set(0.9, 0.9);
+					light2.setGraphicSize(Std.int(light2.width * 1.5));
+
+					swagBacks['lights2'] = light2;
+
+					var light3:FlxSprite = new FlxSprite(42, 44);
+					light3.frames = Paths.getSparrowAtlas('lcd/au_lcd_lights_3', "hex");
+					light3.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					light3.antialiasing = true;
+					light3.scrollFactor.set(0.9, 0.9);
+					light3.setGraphicSize(Std.int(light2.width * 1.5));
+
+					swagBacks['lights3'] = light3;
+
+					var sprite:FlxSprite = new FlxSprite(42, -14);
+					sprite.frames = Paths.getSparrowAtlas('lcd/au_lcd_audience_1', "hex");
+					sprite.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					sprite.antialiasing = true;
+					sprite.scrollFactor.set(0.9, 0.9);
+					sprite.setGraphicSize(Std.int(sprite.width * 1.5));
+
+					swagBacks['crowd1'] = sprite;
+
+					var sprite2:FlxSprite = new FlxSprite(42, -14);
+					sprite2.frames = Paths.getSparrowAtlas('lcd/au_lcd_audience_2', "hex");
+					sprite2.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					sprite2.antialiasing = true;
+					sprite2.scrollFactor.set(0.9, 0.9);
+					sprite2.setGraphicSize(Std.int(sprite.width * 1.5));
+
+					swagBacks['crowd2'] = sprite2;
+
+					var sprite3:FlxSprite = new FlxSprite(42, -14);
+					sprite3.frames = Paths.getSparrowAtlas('lcd/au_lcd_audience_3', "hex");
+					sprite3.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+					sprite3.antialiasing = true;
+					sprite3.scrollFactor.set(0.9, 0.9);
+					sprite3.setGraphicSize(Std.int(sprite.width * 1.5));
+
+					swagBacks['crowd3'] = sprite3;
+
+					toAdd.push(swagBacks['hexBack1']);
+					toAdd.push(swagBacks['hexBack2']);
+					toAdd.push(swagBacks['hexBack3']);
+					toAdd.push(swagBacks['lights1']);
+					toAdd.push(swagBacks['lights2']);
+					toAdd.push(swagBacks['lights3']);
 				}
 			default:
 				{
@@ -446,7 +472,7 @@ class Stage extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		super.update(elapsed);
+		// super.update(elapsed);
 
 		if (!PlayStateChangeables.Optimize)
 		{

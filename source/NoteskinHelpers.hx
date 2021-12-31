@@ -62,7 +62,11 @@ class NoteskinHelpers
 		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id);
 		var data:BitmapData = BitmapData.fromFile(path + ".png");
 
-		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
+		var bitmap = FlxGraphic.fromBitmapData(data);
+
+		FlxG.bitmap.add(bitmap, false, "");
+
+		return FlxAtlasFrames.fromSparrow(bitmap, xmlData[id]);
 
 		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
 		#else

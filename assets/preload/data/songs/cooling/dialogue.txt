@@ -1,0 +1,101 @@
+// header start
+// basic functions are
+// startMusic: <musicFile>
+// addBackground: <background>#<visible>
+// addSound: <soundFile>
+startMusic: dialogue_music.ogg
+addBackground: bg_blur_1#true
+addBackground: bg_blur_2#false
+addBackground: bg_blur_3#false
+addSound: door.ogg
+addSound: knock.ogg
+// it ends here if a ";" was found
+;
+// also if something starts with a "//" thats a comment, and the *line* is skipped
+
+// end of header
+
+// basic run down of how this works
+// [GF] <- thats the character
+// everything until a ";" is text
+// everything after a ";" is the expression
+
+GF: *gasp* BF! Over here!;GF_WELCOME
+BF: Oh! Hi babe, sorry for being late, traffic's being wacky today.;BF_WELCOME
+GF: Nevermind all that, i'm just glad you're here now!;GF_HAPPY
+GF: By the way, have you seen what the show's gonna be about?;GF_THINK1
+BF: Yeah, pretty bold of your dad to invite people he screwed over.;BF_SHRUG1
+BF: Then again, he promised money for the prizes so folks might turn a blind eye.;BF_WONDER1
+GF: Yea about that.;GF_THINK2
+GF: Earlier someone asked me if you could help them with a stage performance today.;GF_CROSS1
+BF: Huh? Who?;BF_THINK1
+GF: Y'know, the tall robot guy that played sports, what was his name again?;GF_CROSS2
+GF: Gex...? Apex......?	;GF_REASSURE2
+BF: Hex?;BF_NEUTRAL2
+GF: Yea! That guy! Honestly, I'm up for you doing it.;GF_THINK2
+GF: That would be your TV debut! The whole nation would see my boyfriend's fresh skills!;GF_EXCITED
+BF: The whole nation...? I dunno, are folks all around the country ready for my flow n' stuff?;BF_THINK2
+GF: You're overthinking this, who cares if some boomers won't like you.;GF_REASSURE1
+GF: Besides, these people would be way more shocked by the living robot anyway.;GF_HAPPY
+BF: Hmm, you're right! I'm gonna show you and tons of people what i'm made of!;BF_POINT1
+BF: Now, where's Hex?;BF_SHRUG2
+GF: Uhhh, he should be in his waiting room probably. I think it's on the 16th floor.;GF_CROSS2
+BF: I'll head out then.;BF_NEUTRAL2
+BF: Oh yeah, hold up, what about... y'know.;BF_THINK3
+GF: Dad? Ah, don't worry.;GF_REASSURE1
+GF: I'll convince him. It should go smoothly.;GF_THINK1
+BF: Ok, good. Well, see ya later babe!;BF_AFFIRM
+GF: See ya!;GF_WELCOME
+
+// we are going to use a function here to change the background, because yeah
+
+// this function basicily will fade into the next backgrounds, and will start the fade once it hits a ";"
+fadeIntoNext
+bg: bg_blur_2
+;
+
+HX: Hmm. Maybe I should harmonize at this part of the song with him...;HX_THINK1
+HX: ...That is if he agrees to perform with me.;HX_HIP1
+
+fadeIntoNext
+bg: bg_blur_3
+;
+
+playSound: knock
+
+BF: Hello?;BF_WELCOME
+
+playSound: door
+
+BF: Oh! Hex, you're here!;BF_NEUTRAL2
+HX: *gasp* Boyfriend! You're here, so that means... you wanna perform with me?;HX_EXCITED
+BF: Yea! Nothing wrong with wanting to help a buddy in need. Can't wait actually!;BF_SHRUG2
+BF: But, how did the whole thing even happen? How were you invited?;BF_THINK1
+HX: Well, seems like Mr. Dearest somehow had seen our battle.;HX_EXPLAIN1
+HX: He took notice of my music and he wanted for me to perform here!;HX_THINK2
+BF: Not suprised at all he knows about everything involving me and GF.;BF_SHRUG1
+BF: Kinda creepy actually. Either way, it's cool that you're here now!;BF_POINT1
+BF: So, what's the song we're gonna do?;BF_WONDER2
+HX: Oh, right! Here's the pattern sheet.;HX_PAPER1
+HX: We can edit it if there's anything you don't like.;HX_PAPER2
+BF: Hmm... Okay.... Alright..;BF_PAPER1
+BF: Looks good to me! I'm sure it will sound great with the music added!;BF_PAPER2
+HX: Nice! That makes me a very happy bot.;HX_HIP2
+BF: Y'know, i'm wondering though. What about you and your b-ball carrer?;BF_THINK1
+HX: It's not going anywhere. I hold basketball dearly to my processor.;HX_BASKETBALL
+HX: I just don't wanna be stuck in one place.;HX_EXPLAIN2
+HX: I wanna try and expierience while I have the occasion!;HX_EXCITED
+HX: That's what my best friend said to me once...;HX_SHY1
+BF: Y'know, for a robot, you're very much a human. And a good person too!;BF_AFFIRM
+
+// plays a sound (don't add the suffix for the file extension here)
+playSound: door
+
+GF: There you are! The show's starting soon, you better get ready.;GF_HAPPY
+BF: We'll be there soon, thanks for the info babe!;BF_WELCOME
+BF: Well? Are you ready?;BF_COOL
+HX: I'm always ready.;HX_COOL
+
+// this signifies the end of the text scene, and it starts the song.
+startSong
+;

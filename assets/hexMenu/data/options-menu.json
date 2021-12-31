@@ -1,0 +1,13 @@
+[
+    {
+     "animations": [],
+     "graphicPath": "options/background",
+     "isSparrow": false,
+     "x": 0,
+     "y": 0,
+     "name": "bg",
+     "layer": 0,
+     "graphicLib": "hexMenu",
+     "scale": 1
+    }
+]

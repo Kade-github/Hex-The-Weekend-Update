@@ -1,0 +1,123 @@
+[
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "bg",
+     "graphicPath": "credits/background",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "selectRight",
+     "graphicPath": "credits/right",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 1,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "devteam",
+     "graphicPath": "credits/devteam",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 615,
+     "layer": 2,
+     "y": 470,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "mamiIcon",
+     "graphicPath": "credits/icon_mami",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 662,
+     "layer": 2,
+     "y": 319,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "jzIcon",
+     "graphicPath": "credits/icon_jz",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 220,
+     "layer": 2,
+     "y": 470,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "djIcon",
+     "graphicPath": "credits/icon_dj",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 721,
+     "layer": 2,
+     "y": 164,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "moroIcon",
+     "graphicPath": "credits/icon_moro",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 246,
+     "layer": 2,
+     "y": 316,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "kadeIcon",
+     "graphicPath": "credits/icon_kade",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 279,
+     "layer": 2,
+     "y": 156,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "yingIcon",
+     "graphicPath": "credits/icon_ying",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 2,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "selectLeft",
+     "graphicPath": "credits/left",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 3,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "cameos",
+     "graphicPath": "credits/cameos",
+     "graphicLib": "hexMenu",
+     "animations": []
+    }
+   ]

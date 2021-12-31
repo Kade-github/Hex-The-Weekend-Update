@@ -18,11 +18,19 @@ class KadeEngineData
 		if (FlxG.save.data.antialiasing == null)
 			FlxG.save.data.antialiasing = true;
 
+		if (FlxG.save.data.weekxBeat == null)
+			FlxG.save.data.weekxbeat = false;
+
 		if (FlxG.save.data.missSounds == null)
 			FlxG.save.data.missSounds = true;
+		if (FlxG.save.data.moffset == null)
+			FlxG.save.data.moffset = 0;
 
 		if (FlxG.save.data.dfjk == null)
 			FlxG.save.data.dfjk = false;
+
+		if (FlxG.save.data.weekendxBeat == null)
+			FlxG.save.data.weekendxBeat = false;
 
 		if (FlxG.save.data.accuracyDisplay == null)
 			FlxG.save.data.accuracyDisplay = true;
@@ -52,8 +60,8 @@ class KadeEngineData
 		if (FlxG.save.data.fpsCap == null)
 			FlxG.save.data.fpsCap = 120;
 
-		if (FlxG.save.data.fpsCap > 340 || FlxG.save.data.fpsCap < 60)
-			FlxG.save.data.fpsCap = 120; // baby proof so you can't hard lock ur copy of kade engine
+		if (FlxG.save.data.fpsCap > 200 || FlxG.save.data.fpsCap < 60)
+			FlxG.save.data.fpsCap = 200; // baby proof so you can't hard lock ur copy of kade engine
 
 		if (FlxG.save.data.scrollSpeed == null)
 			FlxG.save.data.scrollSpeed = 1;
@@ -72,6 +80,9 @@ class KadeEngineData
 
 		if (FlxG.save.data.ghost == null)
 			FlxG.save.data.ghost = true;
+
+		if (FlxG.save.data.weekendxBeat == null)
+			FlxG.save.data.weekendxBeat = false;
 
 		if (FlxG.save.data.distractions == null)
 			FlxG.save.data.distractions = true;
@@ -117,7 +128,7 @@ class KadeEngineData
 
 		if (FlxG.save.data.roundAccuracy == null)
 			FlxG.save.data.roundAccuracy = false;
-		
+
 		FlxG.save.data.cacheImages = false;
 
 		if (FlxG.save.data.middleScroll == null)

@@ -96,7 +96,7 @@ class Ratings
 
 	public static function judgeNote(noteDiff:Float)
 	{
-		var diff = Math.abs(noteDiff);
+		var diff = Math.abs(noteDiff + FlxG.save.data.moffset);
 		for (index in 0...timingWindows.length) // based on 4 timing windows, will break with anything else
 		{
 			var time = timingWindows[index];

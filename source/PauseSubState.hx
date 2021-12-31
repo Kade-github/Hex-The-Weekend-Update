@@ -1,5 +1,6 @@
 package;
 
+import openfl.events.KeyboardEvent;
 import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
 #if FEATURE_LUAMODCHART
@@ -21,6 +22,8 @@ import flixel.util.FlxColor;
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
+
+	public static var FUCKINGDONTDOITVLCMEDIAPLAYERISWEARTOGOD:Bool = false;
 
 	public static var goToOptions:Bool = false;
 	public static var goBack:Bool = false;
@@ -62,7 +65,7 @@ class PauseSubState extends MusicBeatSubstate
 		if (!playingPause)
 		{
 			playingPause = true;
-			pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+			pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast', "shared"), true, true);
 			pauseMusic.volume = 0;
 			pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 			pauseMusic.ID = 9000;
@@ -127,7 +130,10 @@ class PauseSubState extends MusicBeatSubstate
 
 		changeSelection();
 
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		bg.alpha = 0.6;
+		FlxTween.globalManager.active = false;
+
+		cameras = [PlayState.instance.camHUD];
 	}
 
 	override function update(elapsed:Float)
@@ -139,6 +145,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (PlayState.instance.useVideo)
 			menuItems.remove('Resume');
+
+		if (FlxG.sound.music.playing)
+			FlxG.sound.music.pause();
 
 		for (i in FlxG.sound.list)
 		{
@@ -188,8 +197,10 @@ class PauseSubState extends MusicBeatSubstate
 			switch (daSelected)
 			{
 				case "Resume":
+					FlxTween.globalManager.active = true;
 					close();
 				case "Restart Song":
+					FlxTween.globalManager.active = true;
 					PlayState.startTime = 0;
 					if (PlayState.instance.useVideo)
 					{
@@ -197,13 +208,15 @@ class PauseSubState extends MusicBeatSubstate
 						PlayState.instance.remove(PlayState.instance.videoSprite);
 						PlayState.instance.removedVideo = true;
 					}
-					PlayState.instance.clean();
-					FlxG.resetState();
+					PlayState.instance.restart();
 					PlayState.stageTesting = false;
+					close();
 				case "Options":
 					goToOptions = true;
 					close();
 				case "Exit to menu":
+					FUCKINGDONTDOITVLCMEDIAPLAYERISWEARTOGOD = true;
+					FlxTween.globalManager.active = true;
 					PlayState.startTime = 0;
 					if (PlayState.instance.useVideo)
 					{
@@ -231,6 +244,16 @@ class PauseSubState extends MusicBeatSubstate
 
 					PlayState.instance.clean();
 
+					FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayState.instance.handleInput);
+					FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayState.instance.releaseInput);
+					if (PlayState.instance.coolingHandler != null)
+					{
+						Debug.logTrace("removing cooling video");
+						PlayState.instance.remove(PlayState.instance.coolingVideo);
+						PlayState.instance.coolingVideo.destroy();
+						PlayState.instance.coolingHandler.kill();
+						PlayState.instance.coolingHandler.bitmap.dispose();
+					}
 					if (PlayState.isStoryMode)
 					{
 						GameplayCustomizeState.freeplayBf = 'bf';
@@ -240,10 +263,10 @@ class PauseSubState extends MusicBeatSubstate
 						GameplayCustomizeState.freeplayStage = 'stage';
 						GameplayCustomizeState.freeplaySong = 'bopeebo';
 						GameplayCustomizeState.freeplayWeek = 1;
-						FlxG.switchState(new StoryMenuState());
+						PlayState.instance.switchState(new HexStoryMenu(HexMenuState.loadHexMenu("story-menu")));
 					}
 					else
-						FlxG.switchState(new FreeplayState());
+						PlayState.instance.switchState(new HexMainMenu(HexMenuState.loadHexMenu("main-menu")));
 			}
 		}
 

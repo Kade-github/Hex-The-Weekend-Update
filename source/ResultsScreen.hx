@@ -1,5 +1,6 @@
 package;
 
+import openfl.events.KeyboardEvent;
 import haxe.Exception;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
@@ -208,15 +209,28 @@ class ResultsScreen extends FlxSubState
 			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
 			#end
 
+			PlayState.instance.clean();
+
+			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayState.instance.handleInput);
+			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayState.instance.releaseInput);
+			if (PlayState.instance.coolingHandler != null)
+			{
+				PlayState.instance.coolingHandler.bitmap.stop();
+				PlayState.instance.coolingHandler.kill();
+			}
 			if (PlayState.isStoryMode)
 			{
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				Conductor.changeBPM(102);
-				FlxG.switchState(new MainMenuState());
+				GameplayCustomizeState.freeplayBf = 'bf';
+				GameplayCustomizeState.freeplayDad = 'dad';
+				GameplayCustomizeState.freeplayGf = 'gf';
+				GameplayCustomizeState.freeplayNoteStyle = 'normal';
+				GameplayCustomizeState.freeplayStage = 'stage';
+				GameplayCustomizeState.freeplaySong = 'bopeebo';
+				GameplayCustomizeState.freeplayWeek = 1;
+				PlayState.instance.switchState(new HexStoryMenu(HexMenuState.loadHexMenu("story-menu")));
 			}
 			else
-				FlxG.switchState(new FreeplayState());
-			PlayState.instance.clean();
+				PlayState.instance.switchState(new HexMainMenu(HexMenuState.loadHexMenu("main-menu")));
 		}
 
 		if (FlxG.keys.justPressed.F1 && !PlayState.loadRep)
@@ -234,10 +248,19 @@ class ResultsScreen extends FlxSubState
 			if (music != null)
 				music.fadeOut(0.3);
 
+			PlayState.instance.clean();
+
+			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayState.instance.handleInput);
+			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayState.instance.releaseInput);
+			if (PlayState.instance.coolingHandler != null)
+			{
+				PlayState.instance.coolingHandler.bitmap.stop();
+				PlayState.instance.coolingHandler.kill();
+			}
+
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = PlayState.storyDifficulty;
-			LoadingState.loadAndSwitchState(new PlayState());
-			PlayState.instance.clean();
+			PlayState.instance.switchState(new PlayState());
 		}
 
 		super.update(elapsed);

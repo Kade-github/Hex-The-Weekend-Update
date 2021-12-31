@@ -46,6 +46,8 @@ class ImageOutline
 		}
 
 		var render:BitmapData = new BitmapData(w, h, true, 0x000000);
+		if (render == null)
+			return null; // uh oh
 		render.draw(src, m);
 
 		return new Bitmap(ImageOutline.outline(render, weight, color, alpha, antialias, threshold));

@@ -249,6 +249,15 @@ class LuaNote extends LuaClass
 				},
 				setter: SetNumProperty
 			},
+			"isDead" => {
+				defaultValue: 0,
+				getter: function(l:State, data:Any):Int
+				{
+					Lua.pushboolean(l, !connectedNote.alive);
+					return 1;
+				},
+				setter: SetNumProperty
+			},
 
 			"mustPress" => {
 				defaultValue: 1,
@@ -271,17 +280,17 @@ class LuaNote extends LuaClass
 			},
 
 			"isSustain" => {
-				defaultValue: 1,
+				defaultValue: 0,
 				getter: function(l:State, data:Any):Int
 				{
-					Lua.pushnumber(l, connectedNote.rawNoteData);
+					Lua.pushboolean(l, connectedNote.isSustainNote);
 					return 1;
 				},
 				setter: SetNumProperty
 			},
 
 			"isParent" => {
-				defaultValue: 1,
+				defaultValue: 0,
 				getter: function(l:State, data:Any):Int
 				{
 					Lua.pushboolean(l, connectedNote.isParent);
@@ -308,6 +317,16 @@ class LuaNote extends LuaClass
 				}
 			},
 
+			"yNoteOff" => {
+				defaultValue: 0,
+				getter: function(l:State, data:Any):Int
+				{
+					Lua.pushnumber(l, connectedNote.noteYOff);
+					return 1;
+				},
+				setter: SetNumProperty
+			},
+
 			"getChildren" => {
 				defaultValue: 1,
 				getter: function(l:State, data:Any):Int
@@ -317,7 +336,7 @@ class LuaNote extends LuaClass
 					for (i in 0...connectedNote.children.length)
 					{
 						var note = connectedNote.children[i];
-						Lua.pushstring(l, "note_" + note.luaID);
+						Lua.pushstring(l, note.LuaNote.className);
 						Lua.rawseti(l, -2, i);
 					}
 
@@ -445,7 +464,6 @@ class LuaNote extends LuaClass
 		}
 
 		FlxTween.tween(note, {x: xp, y: yp}, time);
-
 		return 0;
 	}
 
@@ -533,14 +551,20 @@ class LuaReceptor extends LuaClass
 
 	public var sprite:StaticArrow;
 
+	var defaultY = 0.0;
+	var defaultX = 0.0;
+	var defaultAngle = 0.0;
+
 	public function new(connectedSprite:StaticArrow, name:String)
 	{
 		super();
-		var defaultY = connectedSprite.y;
-		var defaultX = connectedSprite.x;
-		var defaultAngle = connectedSprite.angle;
+		defaultY = connectedSprite.y;
+		defaultX = connectedSprite.x;
+		defaultAngle = connectedSprite.angle;
 
 		sprite = connectedSprite;
+
+		connectedSprite.luaObject = this;
 
 		className = name;
 
@@ -721,13 +745,30 @@ class LuaReceptor extends LuaClass
 
 		var receptor = findReceptor(index);
 
+		var luaObject = receptor.luaObject;
+
 		if (receptor == null)
 		{
 			LuaL.error(state, "Failure to tween (couldn't find receptor " + index + ")");
 			return 0;
 		}
-
-		FlxTween.tween(receptor, {x: xp, y: yp}, time);
+		if (yp == receptor.y)
+		{
+			FlxTween.tween(receptor, {x: xp}, time, {
+				onUpdate: function(tw)
+				{
+					luaObject.defaultX = receptor.x;
+				}
+			});
+		}
+		else
+			FlxTween.tween(receptor, {x: xp, y: yp}, time, {
+				onUpdate: function(tw)
+				{
+					luaObject.defaultX = receptor.x;
+					luaObject.defaultY = receptor.y;
+				}
+			});
 
 		return 0;
 	}
@@ -929,6 +970,25 @@ class LuaCamera extends LuaClass
 					return 0;
 				}
 			},
+
+			"scaleX" => {
+				defaultValue: connectedCamera.flashSprite.scaleX,
+				getter: function(l:State, data:Any):Int
+				{
+					Lua.pushnumber(l, connectedCamera.flashSprite.scaleX);
+					return 1;
+				},
+				setter: SetNumProperty
+			},
+			"scaleY" => {
+				defaultValue: connectedCamera.flashSprite.scaleY,
+				getter: function(l:State, data:Any):Int
+				{
+					Lua.pushnumber(l, connectedCamera.flashSprite.scaleY);
+					return 1;
+				},
+				setter: SetNumProperty
+			}
 		];
 
 		LuaStorage.ListOfCameras.push(this);
@@ -1040,7 +1100,7 @@ class LuaCamera extends LuaClass
 			return 0;
 		}
 
-		FlxTween.tween(camera, {modAngle: nangle}, time);
+		FlxTween.tween(camera, {angle: nangle}, time);
 
 		return 0;
 	}

@@ -10,6 +10,8 @@ import smTools.SMFile;
 import sys.FileSystem;
 import sys.io.File;
 #end
+import openfl.utils.Assets as OpenFlAssets;
+import lime.utils.Assets as LimeAssets;
 import Song.SongData;
 import flixel.input.gamepad.FlxGamepad;
 import flash.text.TextField;
@@ -31,6 +33,8 @@ class FreeplayState extends MusicBeatState
 	public static var songs:Array<FreeplaySongMetadata> = [];
 
 	var selector:FlxText;
+
+	public static var instance:FreeplayState;
 
 	public static var rate:Float = 1.0;
 
@@ -65,6 +69,8 @@ class FreeplayState extends MusicBeatState
 				diffName = "-easy";
 			case 2:
 				diffName = "-hard";
+			case 3:
+				diffName = "-funky";
 		}
 
 		array.push(Song.conversionChecks(Song.loadFromJson(songId, diffName)));
@@ -72,16 +78,11 @@ class FreeplayState extends MusicBeatState
 
 	public static var list:Array<String> = [];
 
-	override function create()
+	override function load()
 	{
-		clean();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 
-		cached = false;
-
 		populateSongData();
-		PlayState.inDaPlay = false;
-		PlayState.currentSong = "bruh";
 
 		#if !FEATURE_STEPMANIA
 		trace("FEATURE_STEPMANIA was not specified during build, sm file loading is disabled.");
@@ -125,6 +126,19 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		#end
+		super.load();
+	}
+
+	override function create()
+	{
+		clean();
+
+		instance = this;
+
+		cached = false;
+
+		PlayState.inDaPlay = false;
+		PlayState.currentSong = "bruh";
 
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
@@ -240,6 +254,8 @@ class FreeplayState extends MusicBeatState
 				diffsThatExist.push("Easy");
 			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId')))
 				diffsThatExist.push("Normal");
+			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-funky')))
+				diffsThatExist.push("Funky");
 
 			if (diffsThatExist.length == 0)
 			{
@@ -256,7 +272,8 @@ class FreeplayState extends MusicBeatState
 					FreeplayState.loadDiff(1, songId, diffs);
 				if (diffsThatExist.contains("Hard"))
 					FreeplayState.loadDiff(2, songId, diffs);
-
+				if (diffsThatExist.contains("Funky"))
+					FreeplayState.loadDiff(3, songId, diffs);
 				meta.diffs = diffsThatExist;
 
 				if (diffsThatExist.length != 3)
@@ -270,6 +287,10 @@ class FreeplayState extends MusicBeatState
 				{
 					FlxG.sound.cache(Paths.inst(songId));
 				});
+			}
+			if (i != 0)
+			{
+				LoadingScreen.progress = Math.round((i / list.length) * 100);
 			}
 		}
 	}
@@ -410,11 +431,27 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.switchState(new MainMenuState());
+			for (i in assets)
+			{
+				remove(i);
+				i.destroy();
+			}
+			for (i in songs)
+			{
+				for (ii in i.diffs)
+				{
+					ii = "";
+				}
+			}
+			songs = [];
+			switchState(new HexMainMenu(HexMenuState.loadHexMenu("main-menu")));
 		}
 
 		if (accepted)
+		{
+			Debug.logTrace("trying to load the song");
 			loadSong();
+		}
 		else if (charting)
 			loadSong(true);
 
@@ -454,7 +491,13 @@ class FreeplayState extends MusicBeatState
 
 	function loadSong(isCharting:Bool = false)
 	{
-		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+		for (i in assets)
+		{
+			remove(i);
+			i.destroy();
+		}
+
+		loadSongInFreePlay(songs[curSelected].songName, songs[curSelected].week == 11 ? 3 : curDifficulty, isCharting);
 
 		clean();
 	}
@@ -470,6 +513,11 @@ class FreeplayState extends MusicBeatState
 		// Make sure song data is initialized first.
 		if (songData == null || Lambda.count(songData) == 0)
 			populateSongData();
+
+		var realDiff = difficulty;
+
+		if (difficulty == 3)
+			difficulty = 0;
 
 		var currentSongData;
 		try
@@ -487,7 +535,7 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.SONG = currentSongData;
 		PlayState.isStoryMode = false;
-		PlayState.storyDifficulty = difficulty;
+		PlayState.storyDifficulty = realDiff;
 		PlayState.storyWeek = songs[curSelected].week;
 		Debug.logInfo('Loading song ${PlayState.SONG.songName} from week ${PlayState.storyWeek} into Free Play...');
 		#if FEATURE_STEPMANIA
@@ -507,9 +555,9 @@ class FreeplayState extends MusicBeatState
 		PlayState.songMultiplier = rate;
 
 		if (isCharting)
-			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));
+			FreeplayState.instance.switchState(new ChartingState(reloadSong), true, true, true);
 		else
-			LoadingState.loadAndSwitchState(new PlayState());
+			FreeplayState.instance.switchState(new PlayState(), true, true, true);
 	}
 
 	function changeDiff(change:Int = 0)
@@ -540,8 +588,14 @@ class FreeplayState extends MusicBeatState
 		intendedScore = Highscore.getScore(songHighscore, curDifficulty);
 		combo = Highscore.getCombo(songHighscore, curDifficulty);
 		#end
-		diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[curDifficulty])}';
-		diffText.text = CoolUtil.difficultyFromInt(curDifficulty).toUpperCase();
+		if (songs[curSelected].week == 11)
+			diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[0])}';
+		else
+			diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[curDifficulty])}';
+		if (songs[curSelected].week == 11)
+			diffText.text = "FUNKY";
+		else
+			diffText.text = CoolUtil.difficultyFromInt(curDifficulty).toUpperCase();
 	}
 
 	function changeSelection(change:Int = 0)
@@ -555,7 +609,7 @@ class FreeplayState extends MusicBeatState
 		if (curSelected >= songs.length)
 			curSelected = 0;
 
-		if (songs[curSelected].diffs.length != 3)
+		if (songs[curSelected].diffs.length != 3 || curDifficulty == 3)
 		{
 			switch (songs[curSelected].diffs[0])
 			{
@@ -565,6 +619,8 @@ class FreeplayState extends MusicBeatState
 					curDifficulty = 1;
 				case "Hard":
 					curDifficulty = 2;
+				case "Funky":
+					curDifficulty = 3;
 			}
 		}
 
@@ -589,8 +645,14 @@ class FreeplayState extends MusicBeatState
 		// lerpScore = 0;
 		#end
 
-		diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[curDifficulty])}';
-		diffText.text = CoolUtil.difficultyFromInt(curDifficulty).toUpperCase();
+		if (songs[curSelected].week == 11)
+			diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[0])}';
+		else
+			diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[curDifficulty])}';
+		if (songs[curSelected].week == 11)
+			diffText.text = "FUNKY";
+		else
+			diffText.text = CoolUtil.difficultyFromInt(curDifficulty).toUpperCase();
 
 		#if PRELOAD_ALL
 		if (songs[curSelected].songCharacter == "sm")

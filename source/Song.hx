@@ -88,6 +88,18 @@ class Song
 		return parseJSONshit(songId, rawJson, rawMetaJson);
 	}
 
+	public static function loadReactive(songId:String):SongData
+	{
+		var songFile = '$songId/$songId-reactive';
+
+		Debug.logInfo('Loading song JSON: $songFile');
+
+		var rawJson = Paths.loadJSON('songs/$songFile');
+		var rawMetaJson = Paths.loadJSON('songs/$songId/_meta');
+
+		return parseJSONshit(songId, rawJson, rawMetaJson);
+	}
+
 	public static function conversionChecks(song:SongData):SongData
 	{
 		var ba = song.bpm;

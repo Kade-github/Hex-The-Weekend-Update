@@ -1,0 +1,299 @@
+[
+    {
+     "x": 0,
+     "y": 0,
+     "layer": 0,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "bg",
+     "graphicPath": "main/background",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 593,
+     "y": 16,
+     "layer": 0,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "backdrop",
+     "graphicPath": "main/backdrop_float",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 619,
+     "y": 90,
+     "layer": 1,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "splash",
+     "graphicPath": "main/splash_art",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": -5,
+     "y": -2,
+     "layer": 2,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "box1",
+     "graphicPath": "main/box_normal",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 6,
+     "y": 122,
+     "layer": 2,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "box2",
+     "graphicPath": "main/box_normal",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 22,
+     "y": 247,
+     "layer": 2,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "box3",
+     "graphicPath": "main/box_normal",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 44,
+     "y": 372,
+     "layer": 2,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "box4",
+     "graphicPath": "main/box_normal",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 77,
+     "y": 496,
+     "layer": 2,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "box5",
+     "graphicPath": "main/box_normal",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 114,
+     "y": 614,
+     "layer": 2,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "box6",
+     "graphicPath": "main/box_normal",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 69,
+     "y": 362,
+     "layer": 3,
+     "isSparrow": true,
+     "scale": 0.7,
+     "name": "freeplay",
+     "graphicPath": "main/FNF_main_menu_assets",
+     "graphicLib": "hexMenu",
+     "animations": [
+      {
+       "symbol": "freeplay basic",
+       "loop": true,
+       "offsetX": 0,
+       "fps": 24,
+       "offsetY": 5,
+       "name": "freeplay b"
+      },
+      {
+       "symbol": "freeplay white",
+       "loop": true,
+       "offsetX": 36,
+       "fps": 24,
+       "offsetY": 25,
+       "name": "freeplay selected"
+      }
+     ]
+    },
+    {
+     "x": 101,
+     "y": 486,
+     "layer": 3,
+     "isSparrow": true,
+     "scale": 0.7,
+     "name": "gallery",
+     "graphicPath": "main/FNF_main_menu_assets",
+     "graphicLib": "hexMenu",
+     "animations": [
+      {
+       "symbol": "gallery b",
+       "loop": true,
+       "offsetX": 0,
+       "fps": 24,
+       "offsetY": 5,
+       "name": "gallery b"
+      },
+      {
+       "symbol": "gallery white",
+       "loop": true,
+       "offsetX": 45,
+       "fps": 24,
+       "offsetY": 25,
+       "name": "gallery selected"
+      }
+     ]
+    },
+    {
+     "x": 124,
+     "y": 605,
+     "layer": 3,
+     "isSparrow": true,
+     "scale": 0.7,
+     "name": "jukebox",
+     "graphicPath": "main/FNF_main_menu_assets",
+     "graphicLib": "hexMenu",
+     "animations": [
+      {
+       "symbol": "jukebox b",
+       "loop": true,
+       "offsetX": 0,
+       "fps": 24,
+       "offsetY": 5,
+       "name": "jukebox b"
+      },
+      {
+       "symbol": "jukebox w",
+       "loop": true,
+       "offsetX": 40,
+       "fps": 24,
+       "offsetY": 26,
+       "name": "jukebox selected"
+      }
+     ]
+    },
+    {
+     "x": 6,
+     "y": 239,
+     "layer": 3,
+     "isSparrow": true,
+     "scale": 0.9,
+     "name": "story mode",
+     "graphicPath": "main/FNF_main_menu_assets",
+     "graphicLib": "hexMenu",
+     "animations": [
+      {
+       "symbol": "story mode b",
+       "loop": true,
+       "offsetX": 10,
+       "fps": 24,
+       "offsetY": 10,
+       "name": "story mode b"
+      },
+      {
+       "symbol": "story mode white",
+       "loop": true,
+       "offsetX": 36,
+       "fps": 24,
+       "offsetY": 30,
+       "name": "story mode selected"
+      }
+     ]
+    },
+    {
+     "x": 10,
+     "y": -9,
+     "layer": 3,
+     "isSparrow": true,
+     "scale": 0.7,
+     "name": "options",
+     "graphicPath": "main/FNF_main_menu_assets",
+     "graphicLib": "hexMenu",
+     "animations": [
+      {
+       "symbol": "options basic",
+       "loop": true,
+       "fps": 24,
+       "name": "options b"
+      },
+      {
+       "symbol": "options white",
+       "loop": true,
+       "fps": 24,
+       "offsetX": 31,
+       "offsetY": 30,
+       "name": "options selected"
+      }
+     ]
+    },
+    {
+     "x": 39,
+     "y": 115,
+     "layer": 3,
+     "isSparrow": true,
+     "scale": 0.7,
+     "name": "credits",
+     "graphicPath": "main/FNF_main_menu_assets",
+     "graphicLib": "hexMenu",
+     "animations": [
+      {
+       "symbol": "credits basic",
+       "loop": true,
+       "fps": 24,
+       "offsetY": 5,
+       "name": "credits b"
+      },
+      {
+       "symbol": "credits white",
+       "loop": true,
+       "fps": 24,
+       "offsetX": 20,
+       "offsetY": 30,
+       "name": "credits selected"
+      }
+     ]
+    },
+    {
+     "animations": [],
+     "graphicPath": "main/locked",
+     "isSparrow": false,
+     "x": 470,
+     "y": 383,
+     "name": "locked2",
+     "layer": 5,
+     "graphicLib": "hexMenu",
+     "scale": 1
+    },
+    {
+     "animations": [],
+     "graphicPath": "main/locked",
+     "isSparrow": false,
+     "x": 449,
+     "y": 256,
+     "name": "locked1",
+     "layer": 5,
+     "graphicLib": "hexMenu",
+     "scale": 1
+    },
+    {
+     "x": 1220,
+     "y": 13,
+     "layer": 4,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "note",
+     "graphicPath": "main/note_beat",
+     "graphicLib": "hexMenu",
+     "animations": []
+    }
+   ]

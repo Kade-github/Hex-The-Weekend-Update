@@ -37,9 +37,21 @@ class HealthIcon extends FlxSprite
 
 	public function changeIcon(char:String)
 	{
-		if (char != 'bf-pixel' && char != 'bf-old')
+		if (char != 'bf-pixel' && char != 'bf-old' && char != 'hex-g' && char != 'hex-g-bruh')
 			char = char.split("-")[0];
 
+		if (char.startsWith("lcd"))
+		{
+			switch (char)
+			{
+				case "lcdGF1" | "lcdGF2" | "lcdGF3":
+					char = "gf";
+				case "lcdBF1" | "lcdBF2" | "lcdBF3":
+					char = "bf";
+				case "lcdHEX1" | "lcdHEX2" | "lcdHEX3":
+					char = "hex";
+			}
+		}
 		if (!OpenFlAssets.exists(Paths.image('icons/icon-' + char)))
 			char = 'face';
 

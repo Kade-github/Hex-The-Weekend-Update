@@ -39,7 +39,7 @@ class Debug
 		if (input == null)
 			return;
 		var output = formatOutput(input, pos);
-		writeToFlxGLog(output, LOG_STYLE_ERROR);
+		// writeToFlxGLog(output, LOG_STYLE_ERROR);
 		writeToLogFile(output, 'ERROR');
 	}
 
@@ -54,7 +54,7 @@ class Debug
 		if (input == null)
 			return;
 		var output = formatOutput(input, pos);
-		writeToFlxGLog(output, LOG_STYLE_WARN);
+		// writeToFlxGLog(output, LOG_STYLE_WARN);
 		writeToLogFile(output, 'WARN');
 	}
 
@@ -68,7 +68,7 @@ class Debug
 		if (input == null)
 			return;
 		var output = formatOutput(input, pos);
-		writeToFlxGLog(output, LOG_STYLE_INFO);
+		// writeToFlxGLog(output, LOG_STYLE_INFO);
 		writeToLogFile(output, 'INFO');
 	}
 
@@ -83,7 +83,7 @@ class Debug
 		if (input == null)
 			return;
 		var output = formatOutput(input, pos);
-		writeToFlxGLog(output, LOG_STYLE_TRACE);
+		// writeToFlxGLog(output, LOG_STYLE_TRACE);
 		writeToLogFile(output, 'TRACE');
 	}
 

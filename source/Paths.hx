@@ -134,6 +134,11 @@ class Paths
 		return getPath('$key.txt', TEXT, library);
 	}
 
+	inline static public function raw(key:String, ?library:String)
+	{
+		return getPath('data/$key', TEXT, library);
+	}
+
 	inline static public function xml(key:String, ?library:String)
 	{
 		return getPath('data/$key.xml', TEXT, library);
@@ -191,6 +196,12 @@ class Paths
 		return 'songs:assets/songs/${songLowercase}/Inst.$SOUND_EXT';
 	}
 
+	inline static public function video(key:String, ?library:String)
+	{
+		trace('assets/videos/$key.mp4');
+		return getPath('videos/$key.mp4', BINARY, library);
+	}
+
 	static public function listSongsToCache()
 	{
 		// We need to query OpenFlAssets, not the file system, because of Polymod.
@@ -228,6 +239,11 @@ class Paths
 		return OpenFlAssets.exists(path, AssetType.SOUND) || OpenFlAssets.exists(path, AssetType.MUSIC);
 	}
 
+	inline static public function doesImageAssetExist(path:String)
+	{
+		return OpenFlAssets.exists(path, AssetType.IMAGE);
+	}
+
 	inline static public function doesTextAssetExist(path:String)
 	{
 		return OpenFlAssets.exists(path, AssetType.TEXT);
@@ -249,7 +265,8 @@ class Paths
 		{
 			return FlxAtlasFrames.fromSparrow(loadImage('characters/$key', library), file('images/characters/$key.xml', library));
 		}
-		return FlxAtlasFrames.fromSparrow(loadImage(key, library), file('images/$key.xml', library));
+		var atlas = loadImage(key, library);
+		return FlxAtlasFrames.fromSparrow(atlas, file('images/$key.xml', library));
 	}
 
 	/**

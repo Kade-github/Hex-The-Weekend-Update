@@ -5,6 +5,7 @@ import LuaClass.LuaGame;
 import LuaClass.LuaWindow;
 import LuaClass.LuaSprite;
 import LuaClass.LuaCamera;
+import LuaClass.LuaNote;
 import LuaClass.LuaReceptor;
 import openfl.display3D.textures.VideoTexture;
 import flixel.graphics.FlxGraphic;
@@ -30,6 +31,8 @@ class ModchartState
 	// public static var shaders:Array<LuaShader> = null;
 	public static var lua:State = null;
 
+	public static var shownNotes:Array<LuaNote> = [];
+
 	function callLua(func_name:String, args:Array<Dynamic>, ?type:String):Dynamic
 	{
 		var result:Any = null;
@@ -51,7 +54,7 @@ class ModchartState
 		{
 			if (e != "attempt to call a nil value")
 			{
-				trace(StringTools.replace(e, "c++", "haxe function"));
+				FlxG.log.add(StringTools.replace(e, "c++", "haxe function"));
 			}
 		}
 		if (result == null)
@@ -400,6 +403,8 @@ class ModchartState
 
 	function new(?isStoryMode = true)
 	{
+		PlayState.instance.currentLuaIndex = 0;
+		shownNotes = [];
 		trace('opening a lua state (because we are cool :))');
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
@@ -438,7 +443,7 @@ class ModchartState
 
 		setVar("difficulty", PlayState.storyDifficulty);
 		setVar("bpm", Conductor.bpm);
-		setVar("scrollspeed", FlxG.save.data.scrollSpeed != 1 ? FlxG.save.data.scrollSpeed : PlayState.SONG.speed);
+		setVar("scrollSpeed", FlxG.save.data.scrollSpeed != 1 ? PlayStateChangeables.scrollSpeed : PlayState.SONG.speed);
 		setVar("fpsCap", FlxG.save.data.fpsCap);
 		setVar("downscroll", FlxG.save.data.downscroll);
 		setVar("flashing", FlxG.save.data.flashing);
@@ -462,7 +467,7 @@ class ModchartState
 		setVar("showOnlyStrums", false);
 		setVar("strumLine1Visible", true);
 		setVar("strumLine2Visible", true);
-
+		setVar("beatcutoff", PlayState.instance.beatCutoff);
 		setVar("screenWidth", FlxG.width);
 		setVar("screenHeight", FlxG.height);
 		setVar("windowWidth", FlxG.width);
@@ -479,6 +484,17 @@ class ModchartState
 		Lua_helper.add_callback(lua, "makeSprite", makeLuaSprite);
 
 		// sprites
+
+		Lua_helper.add_callback(lua, "print", function(text)
+		{
+			FlxG.log.add(text);
+			trace(text);
+		});
+
+		Lua_helper.add_callback(lua, "setLaneScrollspeed", function(lane, scrollspeed)
+		{
+			PlayState.instance.lScrl[lane] = scrollspeed;
+		});
 
 		Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId)
 		{
@@ -522,9 +538,16 @@ class ModchartState
 			PlayState.instance.strumLine.y = y;
 		});
 
-		Lua_helper.add_callback(lua, "getNumberOfNotes", function(y:Float)
+		Lua_helper.add_callback(lua, "getNotes", function(y:Float)
 		{
-			return PlayState.instance.notes.members.length;
+			Lua.newtable(lua);
+
+			for (i in 0...PlayState.instance.notes.members.length)
+			{
+				var note = PlayState.instance.notes.members[i];
+				Lua.pushstring(lua, note.LuaNote.className);
+				Lua.rawseti(lua, -2, i);
+			}
 		});
 
 		for (i in 0...PlayState.strumLineNotes.length)

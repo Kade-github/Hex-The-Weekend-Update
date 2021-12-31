@@ -1,0 +1,167 @@
+[
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "bg",
+     "graphicPath": "freeplay/background",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "select_right",
+     "graphicPath": "freeplay/select_right",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "center",
+     "graphicPath": "freeplay/center",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": -100,
+     "layer": 0,
+     "y": 245,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "position1",
+     "graphicPath": "freeplay/mini_song_1",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 139,
+     "layer": 0,
+     "y": 245,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "position2",
+     "graphicPath": "freeplay/mini_song_2",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "ratingDisplay",
+     "graphicPath": "freeplay/text_rating",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "recordDisplay",
+     "graphicPath": "freeplay/text_record",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 0,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "timeDisplay",
+     "graphicPath": "freeplay/text_time",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 939,
+     "layer": 0,
+     "y": 245,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "position3",
+     "graphicPath": "freeplay/mini_song_3",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 1170,
+     "layer": 0,
+     "y": 245,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "position4",
+     "graphicPath": "freeplay/mini_song_4",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 1,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "art",
+     "graphicPath": "freeplay/album_cover_1",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "animations": [],
+     "graphicPath": "freeplay/select_down",
+     "isSparrow": false,
+     "x": 0,
+     "y": 0,
+     "name": "selectDown",
+     "layer": 2,
+     "graphicLib": "hexMenu",
+     "scale": 1
+    },
+    {
+     "animations": [],
+     "graphicPath": "freeplay/select_up",
+     "isSparrow": false,
+     "x": 0,
+     "y": 0,
+     "name": "selectUp",
+     "layer": 2,
+     "graphicLib": "hexMenu",
+     "scale": 1
+    },
+    {
+     "x": 0,
+     "layer": 2,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "diff",
+     "graphicPath": "freeplay/difficulty_hard",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 4,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "select_left",
+     "graphicPath": "freeplay/select_left",
+     "graphicLib": "hexMenu",
+     "animations": []
+    }
+   ]

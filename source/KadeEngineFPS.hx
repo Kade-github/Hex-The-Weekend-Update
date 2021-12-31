@@ -113,7 +113,8 @@ class KadeEngineFPS extends TextField
 		{
 			text = (FlxG.save.data.fps ? "FPS: "
 				+ currentFPS
-				+ (Main.watermarks ? "\nKE " + "v" + MainMenuState.kadeEngineVer : "") : (Main.watermarks ? "KE " + "v" + MainMenuState.kadeEngineVer : ""));
+				+ (Main.watermarks ? "\nKE-HEX " + "v" + MainMenuState.kadeEngineVer : "") : (Main.watermarks ? "KE-HEX " + "v" +
+					MainMenuState.kadeEngineVer : ""));
 
 			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
 			text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
@@ -125,9 +126,12 @@ class KadeEngineFPS extends TextField
 
 		visible = true;
 
-		Main.instance.removeChild(bitmap);
+		if (bitmap != null)
+			Main.instance.removeChild(bitmap);
 
 		bitmap = ImageOutline.renderImage(this, 2, 0x000000, 1);
+		if (bitmap == null)
+			return;
 
 		Main.instance.addChild(bitmap);
 

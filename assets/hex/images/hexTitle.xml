@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="logoBumpin.png">
+	<!-- Created with MY OWN FUCKING HANDS -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="hexTitle0000" x="0" y="0" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0001" x="658" y="0" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0002" x="658" y="0" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0003" x="0" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0004" x="0" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0005" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0006" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0007" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0008" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0009" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0010" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0011" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0012" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0013" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+	<SubTexture name="hexTitle0014" x="658" y="603" width="640" height="615" frameX="0" frameY="0" frameWidth="625" frameHeight="605"/>
+</TextureAtlas>

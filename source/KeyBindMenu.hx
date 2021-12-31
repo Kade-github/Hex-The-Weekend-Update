@@ -157,6 +157,7 @@ class KeyBindMenu extends FlxSubState
 				}
 				if (gamepad != null) // GP Logic
 				{
+					KeyBinds.gamepad = true;
 					if (gamepad.justPressed.DPAD_UP)
 					{
 						FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -184,7 +185,8 @@ class KeyBindMenu extends FlxSubState
 						reset();
 					}
 				}
-
+				else
+					KeyBinds.gamepad = false;
 			case "input":
 				if (KeyBinds.gamepad)
 				{

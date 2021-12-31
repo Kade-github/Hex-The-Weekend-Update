@@ -30,7 +30,8 @@ class MenuCharacter extends FlxSprite
 		'pico' => new CharacterSetting(0, 0, 1.0, true),
 		'mom' => new CharacterSetting(-30, 140, 0.85),
 		'parents-christmas' => new CharacterSetting(100, 130, 1.8),
-		'senpai' => new CharacterSetting(-40, -45, 1.4)
+		'senpai' => new CharacterSetting(-40, -45, 1.4),
+		'hex' => new CharacterSetting(-15, 130),
 	];
 
 	private var flipped:Bool = false;
@@ -38,6 +39,8 @@ class MenuCharacter extends FlxSprite
 	private var goesLeftNRight:Bool = false;
 	private var danceLeft:Bool = false;
 	private var character:String = '';
+
+	public var hex:FlxSprite;
 
 	public function new(x:Int, y:Int, scale:Float, flipped:Bool)
 	{
@@ -59,6 +62,7 @@ class MenuCharacter extends FlxSprite
 		animation.addByPrefix('mom', "Mom Idle BLACK LINES", 24, false);
 		animation.addByPrefix('parents-christmas', "Parent Christmas Idle", 24, false);
 		animation.addByPrefix('senpai', "SENPAI idle Black Lines", 24, false);
+		animation.addByPrefix('hex', "Z_Hex", 24);
 
 		setGraphicSize(Std.int(width * scale));
 		updateHitbox();
@@ -84,6 +88,8 @@ class MenuCharacter extends FlxSprite
 		}
 
 		var setting:CharacterSetting = settings[character];
+
+		animation.play(character);
 		offset.set(setting.x, setting.y);
 		setGraphicSize(Std.int(width * setting.scale));
 		flipX = setting.flipped != flipped;

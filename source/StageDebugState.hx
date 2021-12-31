@@ -67,6 +67,19 @@ class StageDebugState extends FlxState
 			curChars.pop();
 		curChar = curChars[curCharIndex];
 
+		if (Stage.curStage == "hexw" || Stage.curStage == "hexwd")
+		{
+			var sprite:FlxSprite = new FlxSprite(42, -14);
+			sprite.frames = Paths.getSparrowAtlas('weekend/${Stage.curStage == "hexwd" ? "detected/" : ""}crowd', "hex");
+			sprite.animation.addByPrefix('bop', 'Symbol 1', 24, false);
+			sprite.antialiasing = true;
+			sprite.scrollFactor.set(0.85, 0.85);
+			sprite.setGraphicSize(Std.int(sprite.width * 1.5));
+
+			Stage.swagBacks['crowd'] = sprite;
+			Stage.toAdd.push(Stage.swagBacks['crowd']);
+		}
+
 		for (i in Stage.toAdd)
 		{
 			add(i);
@@ -78,17 +91,28 @@ class StageDebugState extends FlxState
 			{
 				case 0:
 					add(gf);
+					if (Stage.curStage == 'hexw' || Stage.curStage == 'hexwd')
+						gf.setGraphicSize(Std.int(gf.width * 0.75));
 					for (bg in array)
 						add(bg);
 				case 1:
 					add(dad);
+					if (Stage.curStage == 'hexw' || Stage.curStage == 'hexwd')
+						dad.setGraphicSize(Std.int(dad.width * 0.75));
 					for (bg in array)
 						add(bg);
 				case 2:
 					add(boyfriend);
+					if (Stage.curStage == 'hexw' || Stage.curStage == 'hexwd')
+						boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.75));
 					for (bg in array)
 						add(bg);
 			}
+		}
+
+		for (bg in Stage.appearInFront)
+		{
+			add(bg);
 		}
 
 		camFollow = new FlxObject(0, 0, 2, 2);
@@ -111,19 +135,21 @@ class StageDebugState extends FlxState
 		posText.cameras = [camHUD];
 		add(posText);
 
-    addHelpText();
+		addHelpText();
 	}
 
-  var helpText:FlxText;
-  function addHelpText():Void {
-    var helpTextValue = "Help:\nQ/E : Zoom in and out\nI/J/K/L : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nPress F1 to hide/show this!\n";
-    helpText = new FlxText(940, 0, 0, helpTextValue, 15);
-    helpText.scrollFactor.set();
-		helpText.cameras = [camHUD];
-    helpText.color = FlxColor.WHITE;
+	var helpText:FlxText;
 
-    add(helpText);
-  }
+	function addHelpText():Void
+	{
+		var helpTextValue = "Help:\nQ/E : Zoom in and out\nI/J/K/L : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nPress F1 to hide/show this!\n";
+		helpText = new FlxText(940, 0, 0, helpTextValue, 15);
+		helpText.scrollFactor.set();
+		helpText.cameras = [camHUD];
+		helpText.color = FlxColor.WHITE;
+
+		add(helpText);
+	}
 
 	override public function update(elapsed:Float)
 	{
@@ -242,10 +268,10 @@ class StageDebugState extends FlxState
 		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S)
 			saveBoyPos();
 
-    if (FlxG.keys.justPressed.F1)
+		if (FlxG.keys.justPressed.F1)
 			FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
 
-    helpText.visible = FlxG.save.data.showHelp;
+		helpText.visible = FlxG.save.data.showHelp;
 
 		super.update(elapsed);
 	}

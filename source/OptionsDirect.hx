@@ -4,8 +4,11 @@ import flixel.FlxSprite;
 
 class OptionsDirect extends MusicBeatState
 {
+	public static var instance:OptionsDirect;
+
 	override function create()
 	{
+		instance = this;
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 

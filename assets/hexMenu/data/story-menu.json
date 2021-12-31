@@ -1,0 +1,178 @@
+[
+    {
+     "x": 0,
+     "y": 0,
+     "layer": 0,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "bg",
+     "graphicPath": "story/background_1",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 2,
+     "layer": 1,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "normal_down",
+     "graphicPath": "story/normal_unknown",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 1,
+     "layer": 1,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "windowDown",
+     "graphicPath": "story/window_down_unknown_1",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 1,
+     "layer": 1,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "window",
+     "graphicPath": "story/window_up_1",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 1,
+     "y": 0,
+     "layer": 1,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "normal_up",
+     "graphicPath": "story/focus_week",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 2,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "weekendX",
+     "graphicPath": "story/text_weekend",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 2,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "weekX",
+     "graphicPath": "story/text_week",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 3,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "windowDownDark",
+     "graphicPath": "story/window_down_2",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 3,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "windowDark",
+     "graphicPath": "story/window_up_2",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "y": 0,
+     "layer": 3,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "windowUnknown",
+     "graphicPath": "story/window_down_unknown_2",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 4,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "selectRight",
+     "graphicPath": "story/select_up_right_1",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "layer": 4,
+     "y": 0,
+     "scale": 1,
+     "isSparrow": false,
+     "name": "selectLeft",
+     "graphicPath": "story/select_up_left_1",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "y": 0,
+     "layer": 4,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "bottomDiff",
+     "graphicPath": "story/difficulty_funky",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "x": 0,
+     "y": 0,
+     "layer": 4,
+     "isSparrow": false,
+     "scale": 1,
+     "name": "upperDiff",
+     "graphicPath": "story/difficulty_hard",
+     "graphicLib": "hexMenu",
+     "animations": []
+    },
+    {
+     "animations": [],
+     "graphicPath": "story/select_up_right_2",
+     "isSparrow": false,
+     "x": 0,
+     "y": 0,
+     "name": "darkSelectRight",
+     "layer": 5,
+     "graphicLib": "hexMenu",
+     "scale": 1
+    },
+    {
+     "animations": [],
+     "graphicPath": "story/select_up_left_2",
+     "isSparrow": false,
+     "x": 0,
+     "y": 0,
+     "name": "darkSelectLeft",
+     "layer": 5,
+     "graphicLib": "hexMenu",
+     "scale": 1
+    }
+   ]
