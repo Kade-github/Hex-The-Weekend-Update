@@ -6,7 +6,7 @@
 thats cuz IM FUCKIN LAZY 
 and I modified a source file on FLIXEL itself
 
-Please replace <HaxeToolKitFolder>/haxe/lib/flixel/<flixelver>/flixel/graphics/tile/FlxDrawQuadsItem.hx
+Please replace #HaxeToolKitFolder#/haxe/lib/flixel/#flixelver#/flixel/graphics/tile/FlxDrawQuadsItem.hx
   
 with
   
