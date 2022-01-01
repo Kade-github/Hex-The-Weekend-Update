@@ -4107,6 +4107,8 @@ class PlayState extends MusicBeatState
 			noteDiff = -(daNote.strumTime - Conductor.songPosition);
 		else
 			noteDiff = Conductor.safeZoneOffset; // Assumed SHIT if no note was given
+
+		noteDiff -= FlxG.save.data.moffset;
 		var wife:Float = EtternaFunctions.wife3(-noteDiff, Conductor.timeScale);
 		// boyfriend.playAnim('hey');
 		vocals.volume = 1;
