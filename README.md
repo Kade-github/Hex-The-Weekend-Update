@@ -11,7 +11,7 @@ Please replace <HaxeToolKitFolder>/haxe/lib/flixel/<flixelver>/flixel/graphics/t
 with
   
 ```haxe
-  package flixel.graphics.tile;
+package flixel.graphics.tile;
 
 #if FLX_DRAW_QUADS
 import flixel.FlxCamera;
@@ -149,5 +149,4 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 	#end
 }
 #end
-
-  ```
+```
